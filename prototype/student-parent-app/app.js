@@ -135,6 +135,56 @@ const academies = [
   { id: 3, name: 'VB Cricket Academy', rating: 4.3, distance: '3.8 km', students: 95, location: 'T. Nagar, Chennai', batches: ['U-10', 'U-12', 'U-14'], fee: '2,800/month' }
 ];
 
+// --- Matches (from Academy) ---
+const studentMatches = [
+  {
+    id: 1, title: 'Weekend Practice Match', type: 'Internal', format: 'T10',
+    date: '23 Mar 2026', time: '4:00 PM', venue: 'SAM Academy Ground',
+    status: 'collecting-availability',
+    matchFee: 200, feeNote: 'Per player (ground + ball charges)',
+    createdBy: 'Coach Venkat',
+    eligibility: 'All Batches', maxPlayers: 22,
+    myResponse: 'none', // none, available, not-available, maybe
+    myFeePaid: false,
+    availableCount: 6, totalInvited: 10,
+    deadline: '22 Mar 2026'
+  },
+  {
+    id: 2, title: 'Parents vs Students Fun Match', type: 'Parent Match', format: 'T8',
+    date: '30 Mar 2026', time: '5:00 PM', venue: 'SAM Academy Ground',
+    status: 'collecting-availability',
+    matchFee: 0, feeNote: 'Free — fun event',
+    createdBy: 'Coach Venkat',
+    eligibility: 'Students + Parents', maxPlayers: 30,
+    myResponse: 'available',
+    myFeePaid: true,
+    availableCount: 8, totalInvited: 20,
+    deadline: '28 Mar 2026'
+  },
+  {
+    id: 3, title: 'Inter-Academy: SAM vs Thunder CC', type: 'Inter-Academy', format: 'T20',
+    date: '6 Apr 2026', time: '9:00 AM', venue: 'Corporation Ground, Coimbatore',
+    status: 'teams-announced',
+    matchFee: 500, feeNote: 'Transport + lunch included',
+    createdBy: 'Coach Venkat',
+    eligibility: 'Selected Players Only', maxPlayers: 15,
+    myResponse: 'available',
+    myFeePaid: false,
+    myTeam: 'Team A',
+    availableCount: 12, totalInvited: 15,
+    teamList: [
+      { name: 'Arun Prakash', role: 'Allrounder', avatar: 'AP' },
+      { name: 'Ravi Kumar', role: 'Batsman', avatar: 'RK', isMe: true },
+      { name: 'Karthik M', role: 'Bowler (Fast)', avatar: 'KM' },
+      { name: 'Harish G', role: 'Bowler (Fast)', avatar: 'HG' },
+      { name: 'Mohan K', role: 'Allrounder', avatar: 'MK' },
+    ],
+    deadline: '1 Apr 2026'
+  }
+];
+
+let selectedStudentMatchId = 1;
+
 // --- User Role ---
 let userRole = 'student'; // 'student' or 'parent'
 
@@ -307,6 +357,33 @@ screens['home'] = () => {
         </div>
         <div class="skill-score" style="color:var(--accent);">60%</div>
       </div>
+
+      <!-- Upcoming Match -->
+      ${studentMatches.filter(m => m.status === 'collecting-availability' && m.myResponse === 'none').length > 0 ? `
+      <div class="section-header fade-in-up fade-in-up-4">
+        <span class="section-title">Match Invite</span>
+        <span class="section-link" onclick="navigateTo('matches')">All Matches</span>
+      </div>
+      ${(() => { const m = studentMatches.find(x => x.status === 'collecting-availability' && x.myResponse === 'none'); return m ? `
+      <div class="card fade-in-up fade-in-up-4" style="border:1px solid rgba(245,158,11,0.3);cursor:pointer;" onclick="selectedStudentMatchId=${m.id};navigateTo('match-detail');">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;">
+            <i class="fas fa-cricket-bat-ball" style="color:var(--warning);font-size:16px;"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">${m.title}</div>
+            <div style="font-size:12px;color:var(--text-secondary);">${m.date} · ${m.time}</div>
+          </div>
+          ${m.matchFee > 0 ? '<span style="font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(245,158,11,0.1);color:var(--warning);font-weight:600;">₹' + m.matchFee + '</span>' : '<span style="font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(16,185,129,0.1);color:var(--success);font-weight:600;">Free</span>'}
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-primary" style="flex:1;font-size:12px;padding:8px;" onclick="event.stopPropagation();respondToMatch(${m.id}, 'available')"><i class="fas fa-check"></i> Available</button>
+          <button class="btn btn-ghost" style="flex:1;font-size:12px;padding:8px;border:1px solid var(--border);" onclick="event.stopPropagation();respondToMatch(${m.id}, 'not-available')"><i class="fas fa-times"></i> Can't</button>
+          <button class="btn btn-ghost" style="padding:8px 12px;font-size:12px;border:1px solid var(--border);" onclick="event.stopPropagation();respondToMatch(${m.id}, 'maybe')"><i class="fas fa-question"></i></button>
+        </div>
+      </div>
+      ` : ''; })()}
+      ` : ''}
 
       <!-- Recent Achievements -->
       <div class="section-header fade-in-up fade-in-up-4">
@@ -955,6 +1032,7 @@ screens['more'] = () => {
   const menuItems = [
     { icon: 'fa-user', label: 'Profile', screen: 'profile', color: '#059669' },
     { icon: 'fa-certificate', label: 'Certificates', screen: 'play', color: '#f59e0b' },
+    { icon: 'fa-cricket-bat-ball', label: 'Matches', screen: 'matches', color: '#10b981', badge: studentMatches.filter(m => m.myResponse === 'none' && m.status === 'collecting-availability').length },
     { icon: 'fa-calendar-check', label: 'Attendance History', screen: 'attendance', color: '#3b82f6' },
     { icon: 'fa-clipboard-list', label: 'Exam History', screen: 'play', color: '#8b5cf6' },
     { icon: 'fa-bell', label: 'Notifications', screen: 'notifications', color: '#ef4444' },
@@ -986,6 +1064,7 @@ screens['more'] = () => {
               <i class="fas ${item.icon}" style="color:${item.color};font-size:14px;"></i>
             </div>
             <div style="flex:1;font-weight:500;font-size:var(--font-size-sm);color:var(--text-primary);">${item.label}</div>
+            ${item.badge ? '<div style="min-width:20px;height:20px;border-radius:10px;background:var(--danger);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px;">' + item.badge + '</div>' : ''}
             <i class="fas fa-chevron-right" style="color:var(--text-tertiary);font-size:12px;"></i>
           </div>
         `).join('')}
@@ -1475,7 +1554,258 @@ screens['apply-status'] = () => `
   </div>
 `;
 
+// ========== MATCHES (Student/Parent View) ==========
+
+// ---- MATCHES LIST ----
+screens['matches'] = () => {
+  const statusConfig = {
+    'collecting-availability': { label: 'Respond Now', color: 'var(--warning)', icon: 'fa-hourglass-half', bg: 'rgba(245,158,11,0.1)' },
+    'teams-announced': { label: 'Teams Out', color: '#3b82f6', icon: 'fa-users', bg: 'rgba(59,130,246,0.1)' },
+    'in-progress': { label: 'Live', color: 'var(--success)', icon: 'fa-play-circle', bg: 'rgba(16,185,129,0.1)' },
+    'completed': { label: 'Completed', color: 'var(--text-tertiary)', icon: 'fa-check-circle', bg: 'var(--bg-tertiary)' }
+  };
+
+  const responseConfig = {
+    'none': { label: 'Not Responded', color: 'var(--text-tertiary)', bg: 'var(--bg-tertiary)' },
+    'available': { label: 'You\'re In!', color: 'var(--success)', bg: 'rgba(16,185,129,0.1)' },
+    'not-available': { label: 'Can\'t Make It', color: 'var(--danger)', bg: 'rgba(239,68,68,0.1)' },
+    'maybe': { label: 'Maybe', color: 'var(--warning)', bg: 'rgba(245,158,11,0.1)' }
+  };
+
+  return `
+    <div class="screen-pad screen-enter">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <button class="btn btn-ghost btn-icon" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+        <h3 style="font-size:var(--font-size-xl);font-weight:700;">Matches</h3>
+      </div>
+
+      <!-- Needs Response Banner -->
+      ${studentMatches.filter(m => m.myResponse === 'none' && m.status === 'collecting-availability').length > 0 ? `
+      <div style="padding:12px 14px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+        <i class="fas fa-bell" style="color:var(--warning);font-size:18px;"></i>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);">${studentMatches.filter(m => m.myResponse === 'none').length} match(es) need your response</div>
+          <div style="font-size:11px;color:var(--text-tertiary);">Mark your availability so coach can plan teams</div>
+        </div>
+      </div>
+      ` : ''}
+
+      <!-- Match Cards -->
+      ${studentMatches.map((m, i) => {
+        const sc = statusConfig[m.status];
+        const rc = responseConfig[m.myResponse];
+        return `
+        <div class="card fade-in-up fade-in-up-${Math.min(i + 1, 5)}" style="margin-bottom:12px;cursor:pointer;${m.myResponse === 'none' && m.status === 'collecting-availability' ? 'border:1px solid rgba(245,158,11,0.4);' : ''}" onclick="selectedStudentMatchId=${m.id};navigateTo('match-detail');">
+          <!-- Type & Status Row -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(5,150,105,0.08);color:var(--accent);font-weight:600;">${m.type} · ${m.format}</span>
+            <span style="font-size:10px;padding:3px 8px;border-radius:6px;background:${sc.bg};color:${sc.color};font-weight:600;display:flex;align-items:center;gap:4px;"><i class="fas ${sc.icon}" style="font-size:9px;"></i> ${sc.label}</span>
+          </div>
+          <!-- Title -->
+          <div style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">${m.title}</div>
+          <!-- Details -->
+          <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
+            <span><i class="fas fa-calendar" style="width:14px;color:var(--text-tertiary);"></i> ${m.date}</span>
+            <span><i class="fas fa-clock" style="width:14px;color:var(--text-tertiary);"></i> ${m.time}</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">
+            <i class="fas fa-map-marker-alt" style="width:14px;color:var(--text-tertiary);"></i> ${m.venue}
+          </div>
+          <!-- My Response + Fee -->
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;padding:8px;background:${rc.bg};border-radius:8px;text-align:center;">
+              <div style="font-size:12px;font-weight:600;color:${rc.color};">${rc.label}</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">My Status</div>
+            </div>
+            <div style="flex:1;padding:8px;background:var(--bg-tertiary);border-radius:8px;text-align:center;">
+              <div style="font-size:12px;font-weight:600;color:var(--text-primary);">${m.availableCount}/${m.totalInvited}</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">Available</div>
+            </div>
+            ${m.matchFee > 0 ? `
+            <div style="flex:1;padding:8px;background:${m.myFeePaid ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'};border-radius:8px;text-align:center;">
+              <div style="font-size:12px;font-weight:600;color:${m.myFeePaid ? 'var(--success)' : 'var(--danger)'};">₹${m.matchFee}</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">${m.myFeePaid ? 'Paid' : 'Due'}</div>
+            </div>
+            ` : `
+            <div style="flex:1;padding:8px;background:rgba(16,185,129,0.1);border-radius:8px;text-align:center;">
+              <div style="font-size:12px;font-weight:600;color:var(--success);">Free</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">No Fee</div>
+            </div>`}
+          </div>
+        </div>
+      `}).join('')}
+
+      <div style="height:24px;"></div>
+    </div>
+  `;
+};
+
+// ---- MATCH DETAIL (Student/Parent) ----
+screens['match-detail'] = () => {
+  const m = studentMatches.find(x => x.id === selectedStudentMatchId) || studentMatches[0];
+
+  const statusConfig = {
+    'collecting-availability': { label: 'Collecting Availability', color: 'var(--warning)', icon: 'fa-hourglass-half' },
+    'teams-announced': { label: 'Teams Announced', color: '#3b82f6', icon: 'fa-users' },
+    'in-progress': { label: 'In Progress', color: 'var(--success)', icon: 'fa-play-circle' },
+    'completed': { label: 'Completed', color: 'var(--text-tertiary)', icon: 'fa-check-circle' }
+  };
+  const sc = statusConfig[m.status];
+
+  return `
+    <div class="screen-pad screen-enter">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <button class="btn btn-ghost btn-icon" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+        <div style="flex:1;">
+          <h3 style="font-size:var(--font-size-lg);font-weight:700;">${m.title}</h3>
+          <div style="font-size:11px;color:var(--text-tertiary);">Posted by ${m.createdBy}</div>
+        </div>
+      </div>
+
+      <!-- Match Info Card -->
+      <div class="hero-card fade-in-up fade-in-up-1" style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:11px;padding:4px 10px;border-radius:6px;background:rgba(255,255,255,0.2);font-weight:600;">${m.type} · ${m.format}</span>
+          <span style="font-size:11px;padding:4px 10px;border-radius:6px;background:rgba(255,255,255,0.2);font-weight:600;"><i class="fas ${sc.icon}" style="font-size:10px;"></i> ${sc.label}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
+          <div><i class="fas fa-calendar" style="width:18px;"></i> ${m.date} · ${m.time}</div>
+          <div><i class="fas fa-map-marker-alt" style="width:18px;"></i> ${m.venue}</div>
+          <div><i class="fas fa-users" style="width:18px;"></i> ${m.eligibility} · Max ${m.maxPlayers} players</div>
+          ${m.matchFee > 0 ? `<div><i class="fas fa-rupee-sign" style="width:18px;"></i> ₹${m.matchFee} per player — ${m.feeNote}</div>` : `<div><i class="fas fa-gift" style="width:18px;"></i> ${m.feeNote}</div>`}
+          <div><i class="fas fa-clock" style="width:18px;"></i> Respond by: ${m.deadline}</div>
+        </div>
+      </div>
+
+      <!-- Availability Response -->
+      ${m.status === 'collecting-availability' ? `
+      <div class="card fade-in-up fade-in-up-2" style="margin-bottom:16px;">
+        <div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">Are you available?</div>
+        <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:14px;">Let your coach know if you can play</div>
+        <div style="display:flex;gap:8px;">
+          <button style="flex:1;padding:12px;border-radius:10px;border:2px solid ${m.myResponse === 'available' ? 'var(--success)' : 'var(--border)'};background:${m.myResponse === 'available' ? 'rgba(16,185,129,0.1)' : 'var(--bg-card)'};cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;" onclick="respondToMatch(${m.id}, 'available')">
+            <i class="fas fa-check-circle" style="font-size:22px;color:var(--success);"></i>
+            <span style="font-size:12px;font-weight:600;color:${m.myResponse === 'available' ? 'var(--success)' : 'var(--text-primary)'};">Available</span>
+          </button>
+          <button style="flex:1;padding:12px;border-radius:10px;border:2px solid ${m.myResponse === 'not-available' ? 'var(--danger)' : 'var(--border)'};background:${m.myResponse === 'not-available' ? 'rgba(239,68,68,0.1)' : 'var(--bg-card)'};cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;" onclick="respondToMatch(${m.id}, 'not-available')">
+            <i class="fas fa-times-circle" style="font-size:22px;color:var(--danger);"></i>
+            <span style="font-size:12px;font-weight:600;color:${m.myResponse === 'not-available' ? 'var(--danger)' : 'var(--text-primary)'};">Can't Make It</span>
+          </button>
+          <button style="flex:1;padding:12px;border-radius:10px;border:2px solid ${m.myResponse === 'maybe' ? 'var(--warning)' : 'var(--border)'};background:${m.myResponse === 'maybe' ? 'rgba(245,158,11,0.1)' : 'var(--bg-card)'};cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;" onclick="respondToMatch(${m.id}, 'maybe')">
+            <i class="fas fa-question-circle" style="font-size:22px;color:var(--warning);"></i>
+            <span style="font-size:12px;font-weight:600;color:${m.myResponse === 'maybe' ? 'var(--warning)' : 'var(--text-primary)'};">Maybe</span>
+          </button>
+        </div>
+      </div>
+      ` : m.myResponse === 'available' ? `
+      <div style="padding:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+        <i class="fas fa-check-circle" style="color:var(--success);font-size:18px;"></i>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--success);">You're confirmed for this match!</div>
+          ${m.myTeam ? '<div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">Assigned to ' + m.myTeam + '</div>' : ''}
+        </div>
+      </div>
+      ` : ''}
+
+      <!-- Fee Status (if applicable) -->
+      ${m.matchFee > 0 && m.myResponse === 'available' ? `
+      <div class="card fade-in-up fade-in-up-3" style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text-primary);">Match Fee</div>
+            <div style="font-size:20px;font-weight:800;color:${m.myFeePaid ? 'var(--success)' : 'var(--danger)'};margin-top:4px;">₹${m.matchFee}</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">${m.feeNote}</div>
+          </div>
+          <div style="text-align:center;">
+            ${m.myFeePaid ? `
+              <div style="width:52px;height:52px;border-radius:50%;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-check-circle" style="font-size:28px;color:var(--success);"></i>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:var(--success);margin-top:4px;">Paid</div>
+            ` : `
+              <div style="width:52px;height:52px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-exclamation-circle" style="font-size:28px;color:var(--danger);"></i>
+              </div>
+              <div style="font-size:11px;font-weight:600;color:var(--danger);margin-top:4px;">Unpaid</div>
+            `}
+          </div>
+        </div>
+        ${!m.myFeePaid ? `
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">Pay match fee to confirm your spot</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button style="padding:8px 14px;font-size:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;" onclick="showToast('Opening GPay...', 'info')"><i class="fas fa-mobile-alt" style="color:#5F259F;"></i> GPay</button>
+            <button style="padding:8px 14px;font-size:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;" onclick="showToast('Opening PhonePe...', 'info')"><i class="fas fa-mobile-alt" style="color:#002E6E;"></i> PhonePe</button>
+            <button style="padding:8px 14px;font-size:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;" onclick="showToast('Pay at academy counter', 'info')"><i class="fas fa-money-bill-wave" style="color:#16a34a;"></i> Cash at Academy</button>
+          </div>
+        </div>
+        ` : ''}
+      </div>
+      ` : ''}
+
+      <!-- Response Summary -->
+      <div class="card fade-in-up fade-in-up-3" style="margin-bottom:16px;">
+        <div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:10px;">Response Summary</div>
+        <div style="display:flex;gap:8px;margin-bottom:4px;">
+          <div style="flex:1;text-align:center;padding:10px;background:rgba(16,185,129,0.08);border-radius:8px;">
+            <div style="font-size:18px;font-weight:700;color:var(--success);">${m.availableCount}</div>
+            <div style="font-size:10px;color:var(--text-tertiary);">Available</div>
+          </div>
+          <div style="flex:1;text-align:center;padding:10px;background:var(--bg-tertiary);border-radius:8px;">
+            <div style="font-size:18px;font-weight:700;color:var(--text-primary);">${m.totalInvited - m.availableCount}</div>
+            <div style="font-size:10px;color:var(--text-tertiary);">Others</div>
+          </div>
+          <div style="flex:1;text-align:center;padding:10px;background:var(--bg-tertiary);border-radius:8px;">
+            <div style="font-size:18px;font-weight:700;color:var(--text-primary);">${m.totalInvited}</div>
+            <div style="font-size:10px;color:var(--text-tertiary);">Invited</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team List (if announced) -->
+      ${m.status === 'teams-announced' && m.teamList ? `
+      <div class="card fade-in-up fade-in-up-4" style="margin-bottom:16px;">
+        <div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:12px;"><i class="fas fa-users" style="color:var(--accent);"></i> Team ${m.myTeam || ''}</div>
+        ${m.teamList.map(p => `
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;${p.isMe ? '' : 'border-bottom:1px solid var(--border);'}${p.isMe ? 'background:rgba(5,150,105,0.06);margin:0 -14px;padding:8px 14px;border-radius:8px;' : ''}">
+            <div class="student-avatar" style="width:32px;height:32px;font-size:11px;${p.isMe ? 'background:var(--accent);color:#fff;' : ''}">${p.avatar}</div>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">${p.name} ${p.isMe ? '<span style="font-size:10px;color:var(--accent);font-weight:700;">(You)</span>' : ''}</div>
+              <div style="font-size:11px;color:var(--text-tertiary);">${p.role}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      ` : ''}
+
+      <!-- Share -->
+      <button class="btn btn-ghost btn-full" style="border:1px solid var(--border);font-size:13px;margin-bottom:8px;" onclick="showToast('Match details shared!', 'success')">
+        <i class="fas fa-share-alt"></i> Share with Friends
+      </button>
+
+      <div style="height:24px;"></div>
+    </div>
+  `;
+};
+
 // ========== HELPER FUNCTIONS ==========
+
+function respondToMatch(matchId, response) {
+  const m = studentMatches.find(x => x.id === matchId);
+  if (m) {
+    if (m.myResponse === response) {
+      m.myResponse = 'none';
+      showToast('Response removed', 'info');
+    } else {
+      m.myResponse = response;
+      const msgs = { 'available': 'Marked as Available!', 'not-available': 'Marked as Not Available', 'maybe': 'Marked as Maybe' };
+      const types = { 'available': 'success', 'not-available': 'warning', 'maybe': 'info' };
+      showToast(msgs[response], types[response]);
+    }
+  }
+  renderScreen('match-detail');
+}
 
 function verifyOtp() {
   showToast('OTP verified successfully!', 'success');
@@ -1498,7 +1828,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'learn': [],
       'feed': [],
       'play': ['parent-cricket'],
-      'more': ['notifications', 'profile', 'attendance', 'settings']
+      'more': ['notifications', 'profile', 'attendance', 'settings', 'matches', 'match-detail']
     }
   });
 });

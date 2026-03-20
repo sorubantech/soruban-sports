@@ -211,6 +211,7 @@ function navigateAdmin(page) {
     case 'attendance': renderAttendance(container); break;
     case 'fee-management': renderFeeManagement(container); break;
     case 'staff': renderStaff(container); break;
+    case 'matches': renderMatches(container); break;
     case 'feed': renderFeed(container); break;
     case 'parent-community': renderParentCommunity(container); break;
     case 'reports': renderReports(container); break;
@@ -1373,6 +1374,241 @@ function showInviteStaffModal() {
     <div class="modal-actions">
       <button class="action-btn" onclick="closeModal()">Cancel</button>
       <button class="action-btn primary" onclick="showToast('Invitation sent!','success');closeModal()">Send Invite</button>
+    </div>
+  `);
+}
+
+// ==============================
+// PAGE: Matches
+// ==============================
+function renderMatches(container) {
+  const matches = [
+    { id: 1, title: 'Weekend Practice Match', type: 'Internal', format: 'T10', date: '23 Mar 2026', time: '4:00 PM', venue: 'SAM Academy Ground', status: 'collecting', available: 6, notAvail: 1, maybe: 1, pending: 2, total: 10, fee: 200, feePaid: 2, createdBy: 'Venkat' },
+    { id: 2, title: 'Parents vs Students Fun Match', type: 'Parent Match', format: 'T8', date: '30 Mar 2026', time: '5:00 PM', venue: 'SAM Academy Ground', status: 'collecting', available: 8, notAvail: 2, maybe: 3, pending: 7, total: 20, fee: 0, feePaid: 0, createdBy: 'Venkat' },
+    { id: 3, title: 'Inter-Academy: SAM vs Thunder CC', type: 'Inter-Academy', format: 'T20', date: '6 Apr 2026', time: '9:00 AM', venue: 'Corporation Ground, Coimbatore', status: 'teams-announced', available: 12, notAvail: 1, maybe: 0, pending: 2, total: 15, fee: 500, feePaid: 3, createdBy: 'Venkat' },
+    { id: 4, title: 'U-14 Batch Internal Match', type: 'Internal', format: 'T15', date: '15 Mar 2026', time: '4:00 PM', venue: 'SAM Academy Ground', status: 'completed', available: 14, notAvail: 0, maybe: 0, pending: 0, total: 14, fee: 150, feePaid: 14, createdBy: 'Coach Ravi', result: 'Team A won by 22 runs' },
+  ];
+
+  const statusConfig = {
+    'collecting': { label: 'Collecting Availability', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', icon: 'fa-hourglass-half' },
+    'teams-announced': { label: 'Teams Announced', color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', icon: 'fa-users' },
+    'in-progress': { label: 'In Progress', color: '#10b981', bg: 'rgba(16,185,129,0.1)', icon: 'fa-play-circle' },
+    'completed': { label: 'Completed', color: '#6b7280', bg: 'rgba(107,114,128,0.1)', icon: 'fa-check-circle' }
+  };
+
+  const openMatches = matches.filter(m => m.status !== 'completed');
+  const completedMatches = matches.filter(m => m.status === 'completed');
+  const totalFeeExpected = matches.reduce((s, m) => s + (m.fee * m.available), 0);
+  const totalFeeCollected = matches.reduce((s, m) => s + (m.fee * m.feePaid), 0);
+
+  container.innerHTML = `
+    <h2 class="page-title"><i class="fa-solid fa-cricket-bat-ball" style="color:var(--accent);margin-right:8px"></i> Matches</h2>
+    <p class="page-subtitle">Organize matches, track availability and collect fees</p>
+
+    <!-- Stats Row -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b"><i class="fa-solid fa-hourglass-half"></i></div>
+        <div class="stat-card-value">${openMatches.filter(m => m.status === 'collecting').length}</div>
+        <div class="stat-card-label">Collecting Responses</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:rgba(59,130,246,0.1);color:#3b82f6"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-card-value">${openMatches.filter(m => m.status === 'teams-announced').length}</div>
+        <div class="stat-card-label">Teams Announced</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:rgba(16,185,129,0.1);color:#10b981"><i class="fa-solid fa-check-circle"></i></div>
+        <div class="stat-card-value">${completedMatches.length}</div>
+        <div class="stat-card-label">Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:rgba(239,68,68,0.1);color:#ef4444"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+        <div class="stat-card-value">₹${totalFeeCollected.toLocaleString()} <span style="font-size:12px;color:var(--text-tertiary)">/ ₹${totalFeeExpected.toLocaleString()}</span></div>
+        <div class="stat-card-label">Match Fees Collected</div>
+      </div>
+    </div>
+
+    <!-- Create Match Button -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+      <button class="action-btn primary" onclick="showCreateMatchModal()"><i class="fa-solid fa-plus"></i> Create Match</button>
+    </div>
+
+    <!-- Active Matches -->
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text-primary);">Active Matches</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px;margin-bottom:32px;">
+      ${openMatches.map(m => {
+        const sc = statusConfig[m.status];
+        const feeProgress = m.fee > 0 ? Math.round(m.feePaid / m.available * 100) : 100;
+        return `
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;">
+          <!-- Header -->
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+            <div>
+              <span style="font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(5,150,105,0.08);color:var(--accent);font-weight:600;">${m.type} · ${m.format}</span>
+              <div style="font-size:16px;font-weight:700;color:var(--text-primary);margin-top:6px;">${m.title}</div>
+            </div>
+            <span style="font-size:11px;padding:4px 10px;border-radius:6px;background:${sc.bg};color:${sc.color};font-weight:600;white-space:nowrap;"><i class="fa-solid ${sc.icon}" style="font-size:10px;margin-right:4px;"></i>${sc.label}</span>
+          </div>
+
+          <!-- Details -->
+          <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--text-secondary);margin-bottom:16px;">
+            <span><i class="fa-solid fa-calendar" style="width:16px;color:var(--text-tertiary);"></i> ${m.date}</span>
+            <span><i class="fa-solid fa-clock" style="width:16px;color:var(--text-tertiary);"></i> ${m.time}</span>
+            <span><i class="fa-solid fa-location-dot" style="width:16px;color:var(--text-tertiary);"></i> ${m.venue}</span>
+          </div>
+
+          <!-- Availability Bar -->
+          <div style="margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-tertiary);margin-bottom:6px;">
+              <span>Responses</span>
+              <span>${m.available + m.notAvail + m.maybe}/${m.total} responded</span>
+            </div>
+            <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--bg-tertiary);">
+              <div style="width:${m.available / m.total * 100}%;background:#10b981;" title="${m.available} available"></div>
+              <div style="width:${m.maybe / m.total * 100}%;background:#f59e0b;" title="${m.maybe} maybe"></div>
+              <div style="width:${m.notAvail / m.total * 100}%;background:#ef4444;" title="${m.notAvail} not available"></div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:6px;font-size:11px;">
+              <span style="color:#10b981;font-weight:600;"><i class="fa-solid fa-check"></i> ${m.available} Available</span>
+              <span style="color:#f59e0b;font-weight:600;"><i class="fa-solid fa-question"></i> ${m.maybe} Maybe</span>
+              <span style="color:#ef4444;font-weight:600;"><i class="fa-solid fa-xmark"></i> ${m.notAvail} No</span>
+              <span style="color:var(--text-tertiary);font-weight:600;"><i class="fa-solid fa-clock"></i> ${m.pending} Pending</span>
+            </div>
+          </div>
+
+          ${m.fee > 0 ? `
+          <!-- Fee Collection -->
+          <div style="padding:12px;background:var(--bg-tertiary);border-radius:8px;margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:13px;font-weight:600;color:var(--text-primary);"><i class="fa-solid fa-indian-rupee-sign" style="color:var(--accent);"></i> Fee: ₹${m.fee}/player</span>
+              <span style="font-size:12px;font-weight:600;color:${feeProgress === 100 ? '#10b981' : '#f59e0b'};">${m.feePaid}/${m.available} paid</span>
+            </div>
+            <div style="height:6px;border-radius:3px;overflow:hidden;background:var(--bg-card);">
+              <div style="height:100%;width:${feeProgress}%;background:${feeProgress === 100 ? '#10b981' : '#f59e0b'};border-radius:3px;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-tertiary);margin-top:4px;">
+              <span>Collected: ₹${(m.fee * m.feePaid).toLocaleString()}</span>
+              <span>Pending: ₹${(m.fee * (m.available - m.feePaid)).toLocaleString()}</span>
+            </div>
+          </div>
+          ` : `
+          <div style="padding:8px 12px;background:rgba(16,185,129,0.08);border-radius:8px;margin-bottom:12px;font-size:12px;color:#10b981;font-weight:600;text-align:center;">
+            <i class="fa-solid fa-gift"></i> Free Event — No Fee
+          </div>
+          `}
+
+          <!-- Actions -->
+          <div style="display:flex;gap:8px;">
+            ${m.status === 'collecting' ? `
+              <button class="action-btn primary" style="flex:1;" onclick="showToast('Teams announced!','success')"><i class="fa-solid fa-users"></i> Announce Teams</button>
+              <button class="action-btn" style="flex:1;" onclick="showToast('Nudge sent to ${m.pending} players!','success')"><i class="fa-solid fa-bell"></i> Nudge (${m.pending})</button>
+            ` : m.status === 'teams-announced' ? `
+              <button class="action-btn primary" style="flex:1;background:#10b981;border-color:#10b981;" onclick="showToast('Match started!','success')"><i class="fa-solid fa-play"></i> Start Match</button>
+              <button class="action-btn" style="flex:1;" onclick="showToast('Fee reminders sent!','success')"><i class="fa-solid fa-indian-rupee-sign"></i> Collect Fees (${m.available - m.feePaid})</button>
+            ` : ''}
+            <button class="action-btn" onclick="showToast('Match shared to feed!','success')"><i class="fa-solid fa-share"></i></button>
+          </div>
+        </div>
+      `}).join('')}
+    </div>
+
+    <!-- Completed Matches -->
+    ${completedMatches.length > 0 ? `
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text-primary);">Completed Matches</h3>
+    <div class="data-table" style="margin-bottom:24px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Match</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Players</th>
+            <th>Fee Collected</th>
+            <th>Result</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${completedMatches.map(m => `
+            <tr>
+              <td><strong>${m.title}</strong></td>
+              <td><span style="font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(5,150,105,0.08);color:var(--accent);font-weight:600;">${m.type} · ${m.format}</span></td>
+              <td>${m.date}</td>
+              <td>${m.available}</td>
+              <td>₹${(m.fee * m.feePaid).toLocaleString()}</td>
+              <td style="font-weight:600;color:#10b981;">${m.result || '—'}</td>
+              <td>
+                <button class="action-btn" style="font-size:11px;" onclick="showToast('Scorecard coming soon!','info')"><i class="fa-solid fa-table"></i> Scorecard</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    ` : ''}
+  `;
+}
+
+function showCreateMatchModal() {
+  showModal('Create Match', `
+    <div style="display:grid;gap:14px;">
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Match Title</label>
+        <input type="text" placeholder="e.g. Weekend Practice Match" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;box-sizing:border-box;">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Type</label>
+          <select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;">
+            <option>Internal</option><option>Inter-Academy</option><option>Parent Match</option><option>Parent vs Student</option><option>Tournament</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Format</label>
+          <select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;">
+            <option>T5</option><option selected>T10</option><option>T15</option><option>T20</option><option>Custom</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Date</label>
+          <input type="date" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Time</label>
+          <input type="time" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;box-sizing:border-box;">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Venue</label>
+        <input type="text" value="SAM Academy Ground" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;box-sizing:border-box;">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Fee (₹ per player)</label>
+          <input type="number" value="200" placeholder="0 for free" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Max Players</label>
+          <input type="number" value="22" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;box-sizing:border-box;">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Who Can Join</label>
+        <select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;">
+          <option>All Batches</option><option>Morning U-12</option><option>Evening U-14</option><option>Weekend All Ages</option><option>Parents</option><option>Students + Parents</option><option>Selected Players</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px;">Respond By</label>
+        <input type="date" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:13px;box-sizing:border-box;">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button class="action-btn" onclick="closeModal()" style="flex:1;">Cancel</button>
+        <button class="action-btn primary" onclick="showToast('Match created! Notifications sent to players.','success');closeModal()" style="flex:2;"><i class="fa-solid fa-paper-plane"></i> Create & Notify</button>
+      </div>
     </div>
   `);
 }

@@ -1,0 +1,306 @@
+/* ============================================
+   Soruban Chopify — Design System
+   Health Green Theme + Light/Dark Modes
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/* ---- Light Theme (Default) ---- */
+:root {
+  /* Core Backgrounds */
+  --bg-primary: #F8F9FE;
+  --bg-card: #FFFFFF;
+  --bg-tertiary: #F0F2F8;
+  --bg-glass: rgba(255,255,255,0.72);
+
+  /* Text */
+  --text-primary: #1E2243;
+  --text-secondary: #6E7191;
+  --text-tertiary: #A0A3BD;
+
+  /* Accent — Health Green */
+  --accent: #059669;
+  --accent-light: #10B981;
+  --accent-bg: rgba(5, 150, 105, 0.08);
+  --accent-hover: #047857;
+  --gradient: linear-gradient(135deg, #059669 0%, #10B981 100%);
+  --gradient-hero: linear-gradient(160deg, #059669 0%, #10B981 40%, #6EE7B7 100%);
+  --glow: 0 4px 20px rgba(5, 150, 105, 0.2);
+
+  /* Semantic Colors */
+  --success: #10B981;
+  --success-light: #6EE7B7;
+  --success-bg: rgba(16,185,129,0.08);
+  --warning: #F59E0B;
+  --warning-light: #FCD34D;
+  --warning-bg: rgba(245,158,11,0.08);
+  --danger: #EF4444;
+  --danger-light: #FCA5A5;
+  --danger-bg: rgba(239,68,68,0.08);
+  --info: #3B82F6;
+  --info-light: #93C5FD;
+  --info-bg: rgba(59,130,246,0.08);
+
+  /* Segment Colors */
+  --therapeutic: #8B5CF6;
+  --therapeutic-bg: rgba(139,92,246,0.08);
+  --senior-care: #F59E0B;
+  --senior-care-bg: rgba(245,158,11,0.08);
+  --womens-wellness: #EC4899;
+  --womens-wellness-bg: rgba(236,72,153,0.08);
+  --fresh-cut: #059669;
+  --fresh-cut-bg: rgba(5,150,105,0.08);
+  --fitness: #3B82F6;
+  --fitness-bg: rgba(59,130,246,0.08);
+  --b2b: #F97316;
+  --b2b-bg: rgba(249,115,22,0.08);
+
+  /* Additional Colors */
+  --pink: #EC4899;
+  --pink-bg: rgba(236,72,153,0.08);
+  --teal: #14B8A6;
+  --teal-bg: rgba(20,184,166,0.08);
+  --orange: #F97316;
+  --orange-bg: rgba(249,115,22,0.08);
+  --purple: #8B5CF6;
+  --purple-bg: rgba(139,92,246,0.08);
+  --cyan: #06B6D4;
+  --cyan-bg: rgba(6,182,212,0.08);
+
+  /* Borders */
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+
+  /* Navigation */
+  --nav-bg: rgba(255,255,255,0.85);
+  --nav-blur: blur(24px);
+
+  /* Body BG (behind phone frame) */
+  --body-bg: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+  --shadow-glow: 0 4px 20px rgba(5,150,105,0.2);
+
+  /* Border Radius */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 50%;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 40px;
+
+  /* Typography */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Poppins', 'Inter', sans-serif;
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 22px;
+  --font-size-2xl: 28px;
+  --font-size-3xl: 34px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.35s ease;
+}
+
+/* ---- Dark Theme ---- */
+[data-theme="dark"] {
+  --bg-primary: #0F1117;
+  --bg-card: #1A1D2E;
+  --bg-tertiary: #252A3A;
+  --bg-glass: rgba(26,29,46,0.72);
+
+  --text-primary: #E8ECF4;
+  --text-secondary: #8B92A5;
+  --text-tertiary: #5B6178;
+
+  --accent: #10B981;
+  --accent-light: #34D399;
+  --accent-bg: rgba(16,185,129,0.1);
+  --gradient: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+  --gradient-hero: linear-gradient(160deg, #10B981 0%, #34D399 40%, #6EE7B7 100%);
+  --glow: 0 4px 20px rgba(16,185,129,0.25);
+
+  --success: #34D399;
+  --success-bg: rgba(52,211,153,0.1);
+  --warning: #FBBF24;
+  --warning-bg: rgba(251,191,36,0.1);
+  --danger: #F87171;
+  --danger-bg: rgba(248,113,113,0.1);
+  --info: #60A5FA;
+  --info-bg: rgba(96,165,250,0.1);
+
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+
+  --nav-bg: rgba(15,17,23,0.9);
+
+  --body-bg: linear-gradient(135deg, #0a0a1a 0%, #0d1117 50%, #111827 100%);
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow-glow: 0 4px 20px rgba(16,185,129,0.25);
+}
+
+/* ---- Base Reset ---- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  background: var(--body-bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- Typography ---- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+
+h1 { font-size: var(--font-size-3xl); }
+h2 { font-size: var(--font-size-2xl); }
+h3 { font-size: var(--font-size-xl); }
+h4 { font-size: var(--font-size-lg); }
+h5 { font-size: var(--font-size-md); }
+
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary { color: var(--text-tertiary); }
+.text-accent { color: var(--accent); }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.font-display { font-family: var(--font-display); }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+
+/* ---- Utility Classes ---- */
+.mt-xs { margin-top: var(--space-xs); }
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+.mt-xl { margin-top: var(--space-xl); }
+.mt-2xl { margin-top: var(--space-2xl); }
+.mt-3xl { margin-top: var(--space-3xl); }
+
+.mb-xs { margin-bottom: var(--space-xs); }
+.mb-sm { margin-bottom: var(--space-sm); }
+.mb-md { margin-bottom: var(--space-md); }
+.mb-lg { margin-bottom: var(--space-lg); }
+.mb-xl { margin-bottom: var(--space-xl); }
+.mb-2xl { margin-bottom: var(--space-2xl); }
+
+.p-sm { padding: var(--space-sm); }
+.p-md { padding: var(--space-md); }
+.p-lg { padding: var(--space-lg); }
+.p-xl { padding: var(--space-xl); }
+.p-2xl { padding: var(--space-2xl); }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-xs { gap: var(--space-xs); }
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.gap-lg { gap: var(--space-lg); }
+.gap-xl { gap: var(--space-xl); }
+
+.grid { display: grid; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.overflow-hidden { overflow: hidden; }
+.overflow-y-auto { overflow-y: auto; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+
+.hidden { display: none !important; }
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Scrollbar hiding */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ---- Tamil / Indian Locale ---- */
+.rupee::before { content: '₹'; }
+.cod-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--success-bg);
+  color: var(--success);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.fssai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: var(--radius-xs);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Therapeutic disclaimer */
+.disclaimer-banner {
+  padding: 10px 14px;
+  background: var(--warning-bg);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.disclaimer-banner i {
+  color: var(--warning);
+  margin-right: 6px;
+}

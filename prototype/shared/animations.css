@@ -1,0 +1,216 @@
+/* ============================================
+   Soruban Chopify — Animations
+   ============================================ */
+
+/* ---- Screen Enter ---- */
+@keyframes screenEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.screen-enter {
+  animation: screenEnter 0.35s ease forwards;
+}
+
+/* ---- Slide Up (for modals, sheets) ---- */
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.35s ease forwards;
+}
+
+/* ---- Float (splash logo) ---- */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ---- Pulse ---- */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ---- Count Up ---- */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count-up {
+  animation: countUp 0.5s ease forwards;
+}
+
+/* ---- Shimmer (skeleton loading) ---- */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    var(--bg-card) 50%,
+    var(--bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ---- Fade In ---- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* ---- Fade In Up (staggered) ---- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.fade-in-up-1 { animation-delay: 0.05s; opacity: 0; }
+.fade-in-up-2 { animation-delay: 0.1s; opacity: 0; }
+.fade-in-up-3 { animation-delay: 0.15s; opacity: 0; }
+.fade-in-up-4 { animation-delay: 0.2s; opacity: 0; }
+.fade-in-up-5 { animation-delay: 0.25s; opacity: 0; }
+.fade-in-up-6 { animation-delay: 0.3s; opacity: 0; }
+.fade-in-up-7 { animation-delay: 0.35s; opacity: 0; }
+
+/* ---- Scale In ---- */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease forwards;
+}
+
+/* ---- Spin (loading) ---- */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ---- Bounce ---- */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.bounce {
+  animation: bounce 0.6s ease;
+}
+
+/* ---- Glow Pulse (for active indicators) ---- */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(5,150,105,0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(5,150,105,0);
+  }
+}
+
+.glow-pulse {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* ---- OTP Digit Input Animation ---- */
+@keyframes otpFill {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.otp-fill {
+  animation: otpFill 0.2s ease forwards;
+}
+
+/* ---- Delivery Pipeline Step ---- */
+@keyframes stepComplete {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.step-complete {
+  animation: stepComplete 0.4s ease forwards;
+}
+
+/* ---- Stagger delay helper ---- */
+[data-delay="1"] { animation-delay: 0.05s; }
+[data-delay="2"] { animation-delay: 0.1s; }
+[data-delay="3"] { animation-delay: 0.15s; }
+[data-delay="4"] { animation-delay: 0.2s; }
+[data-delay="5"] { animation-delay: 0.25s; }
+[data-delay="6"] { animation-delay: 0.3s; }
+[data-delay="7"] { animation-delay: 0.35s; }
+[data-delay="8"] { animation-delay: 0.4s; }

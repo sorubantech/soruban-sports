@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soruban Sports — Academy Admin Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../shared/design-system.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo-section">
+        <div class="logo-icon"><i class="fa-solid fa-baseball-bat-ball"></i></div>
+        <div class="logo-text">
+          <span class="logo-title">Soruban Sports</span>
+          <span class="logo-subtitle">Academy Dashboard</span>
+        </div>
+        <button class="sidebar-close" id="sidebar-close" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-page="dashboard" onclick="navigateAdmin('dashboard')">
+          <i class="fa-solid fa-chart-pie"></i><span>Dashboard</span>
+        </a>
+        <a class="nav-item" data-page="students" onclick="navigateAdmin('students')">
+          <i class="fa-solid fa-users"></i><span>Students</span>
+        </a>
+        <a class="nav-item" data-page="curriculum" onclick="navigateAdmin('curriculum')">
+          <i class="fa-solid fa-book-open"></i><span>Curriculum</span>
+        </a>
+        <a class="nav-item" data-page="assessments" onclick="navigateAdmin('assessments')">
+          <i class="fa-solid fa-clipboard-check"></i><span>Assessments</span>
+        </a>
+        <a class="nav-item" data-page="attendance" onclick="navigateAdmin('attendance')">
+          <i class="fa-solid fa-calendar-check"></i><span>Attendance</span>
+        </a>
+        <a class="nav-item" data-page="fee-management" onclick="navigateAdmin('fee-management')">
+          <i class="fa-solid fa-indian-rupee-sign"></i><span>Fee Management</span>
+        </a>
+        <a class="nav-item" data-page="staff" onclick="navigateAdmin('staff')">
+          <i class="fa-solid fa-user-tie"></i><span>Staff</span>
+        </a>
+        <a class="nav-item" data-page="feed" onclick="navigateAdmin('feed')">
+          <i class="fa-solid fa-newspaper"></i><span>Feed & Posts</span>
+        </a>
+        <a class="nav-item" data-page="parent-community" onclick="navigateAdmin('parent-community')">
+          <i class="fa-solid fa-people-group"></i><span>Parent Community</span>
+        </a>
+        <a class="nav-item" data-page="reports" onclick="navigateAdmin('reports')">
+          <i class="fa-solid fa-chart-bar"></i><span>Reports</span>
+        </a>
+        <a class="nav-item" data-page="settings" onclick="navigateAdmin('settings')">
+          <i class="fa-solid fa-gear"></i><span>Settings</span>
+        </a>
+        <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
+          <a class="nav-item" onclick="window.location.href='../landing/index.html'" style="opacity:0.7;">
+            <i class="fa-solid fa-th-large"></i><span>App Selector</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <h1 class="top-bar-title">SAM Cricket Academy</h1>
+        </div>
+        <div class="top-bar-right">
+          <div class="search-input">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" placeholder="Search students, staff..." id="global-search">
+          </div>
+          <button class="top-bar-icon" onclick="alert('Notifications panel coming soon!')">
+            <i class="fa-solid fa-bell"></i>
+            <span class="alert-badge">7</span>
+          </button>
+          <div class="admin-profile">
+            <div class="admin-avatar">S</div>
+            <span class="admin-label">Venkat</span>
+          </div>
+          <button class="top-bar-icon theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+            <i class="fa-solid fa-moon" id="theme-icon"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="page-content" id="page-content">
+        <!-- Dynamic content rendered by app.js -->
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

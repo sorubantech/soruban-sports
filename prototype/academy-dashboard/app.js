@@ -183,6 +183,24 @@ const parentCommunity = {
   ]
 };
 
+const supportTickets = [
+  { id: 'TK-001', subject: 'Cannot upload student photos', category: 'Technical Issue', priority: 'High', status: 'Open', created: '2026-03-14', lastUpdate: '2026-03-15', raisedBy: 'Venkat', role: 'Owner', description: 'When trying to upload photos from the student profile, the upload fails.', messages: [
+    { from: 'Venkat', role: 'Academy Owner', time: '14 Mar, 10:30 AM', text: 'Getting an error when uploading student photos. Tried on multiple devices.' },
+    { from: 'Support Team', role: 'Soruban Support', time: '15 Mar, 9:00 AM', text: 'We are investigating this issue. Could you share a screenshot of the error?' }
+  ]},
+  { id: 'TK-002', subject: 'How to set up recurring batch schedules?', category: 'How-to', priority: 'Low', status: 'Resolved', created: '2026-03-10', lastUpdate: '2026-03-11', raisedBy: 'Venkat', role: 'Owner', description: 'Need help setting up weekend batch schedules.', messages: [
+    { from: 'Venkat', role: 'Academy Owner', time: '10 Mar, 2:00 PM', text: 'How do I set up weekend batches with different timings?' },
+    { from: 'Support Team', role: 'Soruban Support', time: '11 Mar, 10:00 AM', text: 'Go to Batches > Create Batch > Select days as Sat-Sun.' }
+  ]},
+  { id: 'TK-003', subject: 'Fee report incorrect totals', category: 'Bug Report', priority: 'Medium', status: 'In Progress', created: '2026-03-12', lastUpdate: '2026-03-14', raisedBy: 'Admin', role: 'Admin', description: 'Fee management report shows incorrect totals for February.', messages: [
+    { from: 'Admin', role: 'Academy Admin', time: '12 Mar, 4:00 PM', text: 'February fee report total doesn\'t match individual student payments.' },
+    { from: 'Support Team', role: 'Soruban Support', time: '13 Mar, 11:00 AM', text: 'We\'ve identified the issue. Fix is being deployed.' }
+  ]},
+  { id: 'TK-004', subject: 'Request: Export attendance as PDF', category: 'Feature Request', priority: 'Low', status: 'Open', created: '2026-03-16', lastUpdate: '2026-03-16', raisedBy: 'Venkat', role: 'Owner', description: 'Would be helpful to export attendance reports as PDF for parents.', messages: [
+    { from: 'Venkat', role: 'Academy Owner', time: '16 Mar, 3:00 PM', text: 'Can we get a PDF export option for attendance reports? Parents often ask for printed copies.' }
+  ]}
+];
+
 // ---- Navigation ----
 function navigateAdmin(page) {
   currentPage = page;
@@ -216,6 +234,7 @@ function navigateAdmin(page) {
     case 'parent-community': renderParentCommunity(container); break;
     case 'reports': renderReports(container); break;
     case 'settings': renderSettings(container); break;
+    case 'support': renderSupport(container); break;
     default: renderDashboard(container);
   }
 
@@ -2224,6 +2243,257 @@ function renderSettings(container) {
       </div>
     </div>
   `;
+}
+
+// ---- Technical Support ----
+function renderSupport(container) {
+  const openCount = supportTickets.filter(t => t.status === 'Open').length;
+  const inProgressCount = supportTickets.filter(t => t.status === 'In Progress').length;
+  const resolvedCount = supportTickets.filter(t => t.status === 'Resolved').length;
+
+  container.innerHTML = `
+    <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:8px;">
+      <a onclick="navigateAdmin('dashboard')" style="cursor:pointer;color:var(--accent)">Home</a> / Technical Support
+    </div>
+    <h2 class="page-title"><i class="fa-solid fa-headset" style="color:var(--accent);margin-right:8px"></i> Technical Support</h2>
+    <p class="page-subtitle">Get help from Soruban Sports support team</p>
+
+    <!-- Stats Row -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:rgba(239,68,68,0.1);color:#ef4444"><i class="fa-solid fa-envelope-open"></i></div>
+        <div class="stat-card-value">${openCount}</div>
+        <div class="stat-card-label">Open Tickets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b"><i class="fa-solid fa-spinner"></i></div>
+        <div class="stat-card-value">${inProgressCount}</div>
+        <div class="stat-card-label">In Progress</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon" style="background:rgba(16,185,129,0.1);color:#10b981"><i class="fa-solid fa-check-circle"></i></div>
+        <div class="stat-card-value">${resolvedCount}</div>
+        <div class="stat-card-label">Resolved</div>
+      </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="table-wrapper">
+      <div class="filter-bar" style="flex-wrap:wrap;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="action-btn primary support-filter-btn active" data-filter="All" onclick="filterSupportTickets('All', this)">All (${supportTickets.length})</button>
+          <button class="action-btn support-filter-btn" data-filter="Open" onclick="filterSupportTickets('Open', this)">Open (${openCount})</button>
+          <button class="action-btn support-filter-btn" data-filter="In Progress" onclick="filterSupportTickets('In Progress', this)">In Progress (${inProgressCount})</button>
+          <button class="action-btn support-filter-btn" data-filter="Resolved" onclick="filterSupportTickets('Resolved', this)">Resolved (${resolvedCount})</button>
+        </div>
+        <button class="action-btn primary" onclick="showRaiseTicketModal()"><i class="fa-solid fa-plus"></i> Raise New Ticket</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table" id="support-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Subject</th>
+              <th>Category</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="support-tbody">
+            ${renderSupportRows(supportTickets)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function renderSupportRows(tickets) {
+  return tickets.map(t => {
+    const priorityColors = { 'High': '#ef4444', 'Medium': '#f59e0b', 'Low': '#6b7280' };
+    const statusColors = { 'Open': '#ef4444', 'In Progress': '#f59e0b', 'Resolved': '#10b981' };
+    const statusBg = { 'Open': 'rgba(239,68,68,0.1)', 'In Progress': 'rgba(245,158,11,0.1)', 'Resolved': 'rgba(16,185,129,0.1)' };
+    const priorityBg = { 'High': 'rgba(239,68,68,0.1)', 'Medium': 'rgba(245,158,11,0.1)', 'Low': 'rgba(107,114,128,0.1)' };
+    return `
+      <tr>
+        <td style="font-weight:600;color:var(--accent)">${t.id}</td>
+        <td style="font-weight:600">${t.subject}</td>
+        <td><span style="font-size:12px;padding:3px 10px;border-radius:20px;background:var(--bg-tertiary);color:var(--text-secondary)">${t.category}</span></td>
+        <td><span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${priorityBg[t.priority]};color:${priorityColors[t.priority]};font-weight:600">${t.priority}</span></td>
+        <td><span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${statusBg[t.status]};color:${statusColors[t.status]};font-weight:600">${t.status}</span></td>
+        <td style="font-size:12px;color:var(--text-tertiary)">${t.created}</td>
+        <td><button class="action-btn" onclick="showTicketDetail('${t.id}')"><i class="fa-solid fa-eye"></i> View</button></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterSupportTickets(status, btn) {
+  // Update active button
+  document.querySelectorAll('.support-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const filtered = status === 'All' ? supportTickets : supportTickets.filter(t => t.status === status);
+  document.getElementById('support-tbody').innerHTML = renderSupportRows(filtered);
+}
+
+function showTicketDetail(ticketId) {
+  const ticket = supportTickets.find(t => t.id === ticketId);
+  if (!ticket) return;
+
+  const statusColors = { 'Open': '#ef4444', 'In Progress': '#f59e0b', 'Resolved': '#10b981' };
+  const statusBg = { 'Open': 'rgba(239,68,68,0.1)', 'In Progress': 'rgba(245,158,11,0.1)', 'Resolved': 'rgba(16,185,129,0.1)' };
+  const priorityColors = { 'High': '#ef4444', 'Medium': '#f59e0b', 'Low': '#6b7280' };
+
+  const messagesHtml = ticket.messages.map(m => {
+    const isSupport = m.role === 'Soruban Support';
+    return `
+      <div style="display:flex;flex-direction:column;${isSupport ? 'align-items:flex-start' : 'align-items:flex-end'};margin-bottom:16px;">
+        <div style="max-width:80%;padding:12px 16px;border-radius:12px;${isSupport ? 'border-top-left-radius:4px;background:var(--bg-tertiary);' : 'border-top-right-radius:4px;background:rgba(59,130,246,0.1);'}">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:12px;">
+            <strong style="font-size:13px;color:var(--text-primary)">${m.from}</strong>
+            <span style="font-size:11px;color:var(--text-tertiary)">${m.role}</span>
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);margin:0;line-height:1.5">${m.text}</p>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:6px">${m.time}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  showModal(`Ticket ${ticket.id}`, `
+    <div style="margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+        <h4 style="margin:0;font-size:16px;color:var(--text-primary)">${ticket.subject}</h4>
+        <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${statusBg[ticket.status]};color:${statusColors[ticket.status]};font-weight:600">${ticket.status}</span>
+        <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:rgba(107,114,128,0.1);color:${priorityColors[ticket.priority]};font-weight:600">${ticket.priority} Priority</span>
+      </div>
+      <div style="display:flex;gap:20px;font-size:12px;color:var(--text-tertiary);flex-wrap:wrap;">
+        <span><i class="fa-solid fa-tag" style="margin-right:4px"></i>${ticket.category}</span>
+        <span><i class="fa-solid fa-user" style="margin-right:4px"></i>${ticket.raisedBy} (${ticket.role})</span>
+        <span><i class="fa-solid fa-calendar" style="margin-right:4px"></i>Created: ${ticket.created}</span>
+        <span><i class="fa-solid fa-clock" style="margin-right:4px"></i>Updated: ${ticket.lastUpdate}</span>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:16px;">
+      <h4 style="font-size:14px;margin-bottom:12px;color:var(--text-primary)"><i class="fa-solid fa-comments" style="color:var(--accent);margin-right:6px"></i>Conversation</h4>
+      <div style="max-height:300px;overflow-y:auto;padding:8px 0;">
+        ${messagesHtml}
+      </div>
+    </div>
+
+    ${ticket.status !== 'Resolved' ? `
+    <div style="border-top:1px solid var(--border);padding-top:16px;">
+      <h4 style="font-size:14px;margin-bottom:8px;color:var(--text-primary)">Reply</h4>
+      <textarea id="ticket-reply" rows="3" placeholder="Type your reply..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+        <button class="action-btn" onclick="closeModal()">Cancel</button>
+        <button class="action-btn primary" onclick="sendTicketReply('${ticket.id}')"><i class="fa-solid fa-paper-plane"></i> Send Reply</button>
+      </div>
+    </div>
+    ` : `
+    <div style="border-top:1px solid var(--border);padding-top:16px;text-align:center;color:var(--text-tertiary);font-size:13px;">
+      <i class="fa-solid fa-check-circle" style="color:#10b981;margin-right:4px"></i> This ticket has been resolved
+    </div>
+    `}
+  `);
+}
+
+function sendTicketReply(ticketId) {
+  const replyText = document.getElementById('ticket-reply')?.value?.trim();
+  if (!replyText) {
+    showToast('Please enter a reply message', 'error');
+    return;
+  }
+  const ticket = supportTickets.find(t => t.id === ticketId);
+  if (ticket) {
+    ticket.messages.push({
+      from: 'Venkat',
+      role: 'Academy Owner',
+      time: 'Just now',
+      text: replyText
+    });
+    ticket.lastUpdate = '2026-03-21';
+  }
+  closeModal();
+  showToast('Reply sent successfully!', 'success');
+  renderSupport(document.getElementById('page-content'));
+}
+
+function showRaiseTicketModal() {
+  showModal('Raise New Ticket', `
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label style="font-size:13px;font-weight:600;color:var(--text-primary);display:block;margin-bottom:6px;">Category</label>
+        <select id="new-ticket-category" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;font-family:inherit;">
+          <option value="">Select category...</option>
+          <option value="Technical Issue">Technical Issue</option>
+          <option value="Bug Report">Bug Report</option>
+          <option value="How-to">How-to Question</option>
+          <option value="Feature Request">Feature Request</option>
+          <option value="Billing">Billing</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:13px;font-weight:600;color:var(--text-primary);display:block;margin-bottom:6px;">Subject</label>
+        <input type="text" id="new-ticket-subject" placeholder="Brief description of your issue..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;font-family:inherit;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:13px;font-weight:600;color:var(--text-primary);display:block;margin-bottom:6px;">Priority</label>
+        <select id="new-ticket-priority" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;font-family:inherit;">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:13px;font-weight:600;color:var(--text-primary);display:block;margin-bottom:6px;">Description</label>
+        <textarea id="new-ticket-desc" rows="4" placeholder="Describe your issue in detail..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;">
+        <button class="action-btn" onclick="closeModal()">Cancel</button>
+        <button class="action-btn primary" onclick="submitNewTicket()"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
+      </div>
+    </div>
+  `);
+}
+
+function submitNewTicket() {
+  const category = document.getElementById('new-ticket-category')?.value;
+  const subject = document.getElementById('new-ticket-subject')?.value?.trim();
+  const priority = document.getElementById('new-ticket-priority')?.value;
+  const desc = document.getElementById('new-ticket-desc')?.value?.trim();
+
+  if (!category || !subject || !desc) {
+    showToast('Please fill in all required fields', 'error');
+    return;
+  }
+
+  const newId = 'TK-' + String(supportTickets.length + 1).padStart(3, '0');
+  supportTickets.unshift({
+    id: newId,
+    subject: subject,
+    category: category,
+    priority: priority,
+    status: 'Open',
+    created: '2026-03-21',
+    lastUpdate: '2026-03-21',
+    raisedBy: 'Venkat',
+    role: 'Owner',
+    description: desc,
+    messages: [
+      { from: 'Venkat', role: 'Academy Owner', time: 'Just now', text: desc }
+    ]
+  });
+
+  closeModal();
+  showToast('Ticket ' + newId + ' raised successfully!', 'success');
+  renderSupport(document.getElementById('page-content'));
 }
 
 // ---- Initialize on Load ----

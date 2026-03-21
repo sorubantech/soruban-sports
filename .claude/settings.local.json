@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/clients/soruban/soruban-chopify/**)",
+      "Read(//d/clients/soruban/soruban-chopify/prototype/**)",
+      "Bash(xargs sed:*)",
+      "Bash(node -c \"d:/clients/soruban/soruban-sports/prototype/academy-app/app.js\")",
+      "Bash(node -c \"d:/clients/soruban/soruban-sports/prototype/student-parent-app/app.js\")",
+      "Bash(grep -n \"case ''feed''\" \"d:/clients/soruban/soruban-sports/prototype/academy-dashboard/app.js\")",
+      "Bash(node -c \"d:/clients/soruban/soruban-sports/prototype/academy-dashboard/app.js\")",
+      "Bash(grep:*)",
+      "Bash(du:*)",
+      "Bash(git add:*)"
+    ],
+    "additionalDirectories": [
+      "d:\\clients\\soruban\\soruban-sports\\docs"
+    ]
+  }
+}

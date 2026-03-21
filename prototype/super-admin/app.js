@@ -84,18 +84,78 @@ const users = [
 
 // ---- Mock Data: Support Tickets ----
 const tickets = [
-  { id: 'TK-001', academy: 'SAM Cricket Academy', subject: 'Cannot upload student photos', priority: 'High', status: 'Open', created: '2026-03-14', assigned: 'Support Team' },
-  { id: 'TK-002', academy: 'Star Cricket Academy', subject: 'Billing discrepancy in March invoice', priority: 'Medium', status: 'In Progress', assigned: 'Billing Team', created: '2026-03-12' },
-  { id: 'TK-003', academy: 'CBE Sports Academy', subject: 'Request for custom reporting', priority: 'Low', status: 'In Progress', assigned: 'Product Team', created: '2026-03-10' },
-  { id: 'TK-004', academy: 'Young Stars Cricket', subject: 'App crashing on attendance page', priority: 'High', status: 'Open', assigned: 'Dev Team', created: '2026-03-15' },
-  { id: 'TK-005', academy: 'Cricket Champions', subject: 'Need help setting up tournament', priority: 'Medium', status: 'In Progress', assigned: 'Support Team', created: '2026-03-08' },
-  { id: 'TK-006', academy: 'Dhoni Cricket School', subject: 'Content not loading properly', priority: 'Medium', status: 'In Progress', assigned: 'Dev Team', created: '2026-03-06' },
-  { id: 'TK-007', academy: 'KPL Cricket Academy', subject: 'How to upgrade from Free to Pro?', priority: 'Low', status: 'Resolved', assigned: 'Support Team', created: '2026-03-01' },
-  { id: 'TK-008', academy: 'Metro Cricket Hub', subject: 'Parent app login issues', priority: 'High', status: 'Open', assigned: 'Dev Team', created: '2026-03-16' },
-  { id: 'TK-009', academy: 'Future Stars Academy', subject: 'Feature request: batch import students', priority: 'Low', status: 'Resolved', assigned: 'Product Team', created: '2026-02-28' },
-  { id: 'TK-010', academy: 'Royal Cricket Academy', subject: 'Payment gateway timeout', priority: 'Medium', status: 'In Progress', assigned: 'Dev Team', created: '2026-03-05' },
-  { id: 'TK-011', academy: 'CBE Sports Academy', subject: 'Dashboard performance slow', priority: 'Low', status: 'Resolved', assigned: 'Dev Team', created: '2026-02-25' },
-  { id: 'TK-012', academy: 'Southern Sports Club', subject: 'Account suspension inquiry', priority: 'High', status: 'Resolved', assigned: 'Support Team', created: '2026-02-20' }
+  { id: 'TK-001', academy: 'SAM Cricket Academy', subject: 'Cannot upload student photos', priority: 'High', status: 'Open', created: '2026-03-14', assigned: 'Support Team', userType: 'Academy Owner', userName: 'Rajesh Kumar', category: 'Bug Report', description: 'When trying to upload student profile photos from the academy dashboard, the upload button does not respond after selecting a file. Tried on Chrome and Firefox. File sizes are under 2MB (JPEG format).', messages: [
+    { from: 'Rajesh Kumar', role: 'Academy Owner', time: '2026-03-14 09:30', text: 'Hi, I am unable to upload student photos. The upload button becomes unresponsive after I select a file. This is happening for all students.' },
+    { from: 'Support Agent', role: 'Support Team', time: '2026-03-14 10:15', text: 'Thank you for reporting this, Rajesh. Could you let us know the browser version and whether you see any error messages on screen?' },
+    { from: 'Rajesh Kumar', role: 'Academy Owner', time: '2026-03-14 11:00', text: 'I am using Chrome 120. No error message appears, the button just stops working. Same issue on Firefox 121.' }
+  ]},
+  { id: 'TK-002', academy: 'Star Cricket Academy', subject: 'Billing discrepancy in March invoice', priority: 'Medium', status: 'In Progress', assigned: 'Billing Team', created: '2026-03-12', userType: 'Academy Owner', userName: 'Vikram Singh', category: 'Billing', description: 'The March invoice shows charges for 130 students but we only have 120 active students. Need the invoice to be corrected and re-issued.', messages: [
+    { from: 'Vikram Singh', role: 'Academy Owner', time: '2026-03-12 14:00', text: 'Our March invoice shows 130 students but we only have 120 active students. Please check and correct this.' },
+    { from: 'Support Agent', role: 'Billing Team', time: '2026-03-12 15:30', text: 'Hi Vikram, we are looking into this. It could be due to 10 students who were briefly added and then removed during the billing cycle. We will verify and update you.' },
+    { from: 'Vikram Singh', role: 'Academy Owner', time: '2026-03-12 16:00', text: 'Those students were added by mistake and removed within an hour. Please adjust the invoice accordingly.' }
+  ]},
+  { id: 'TK-003', academy: 'CBE Sports Academy', subject: 'Request for custom reporting', priority: 'Low', status: 'In Progress', assigned: 'Product Team', created: '2026-03-10', userType: 'Coach', userName: 'Priya Coach', category: 'Feature Request', description: 'We need the ability to generate custom reports that show student progress across multiple skills over a time period, with export to PDF.', messages: [
+    { from: 'Priya Coach', role: 'Coach', time: '2026-03-10 10:00', text: 'We need custom reporting capability. Currently the reports are too basic for our coaching staff to track multi-skill progress.' },
+    { from: 'Support Agent', role: 'Product Team', time: '2026-03-10 14:00', text: 'Thank you for the suggestion, Priya. We have added this to our feature backlog. Could you share a sample of the kind of report format you are looking for?' }
+  ]},
+  { id: 'TK-004', academy: 'Young Stars Cricket', subject: 'App crashing on attendance page', priority: 'High', status: 'Open', assigned: 'Dev Team', created: '2026-03-15', userType: 'Coach', userName: 'Arun P', category: 'Bug Report', description: 'The coach mobile app crashes every time I try to open the attendance page for the U-14 batch. Started happening after the last update.', messages: [
+    { from: 'Arun P', role: 'Coach', time: '2026-03-15 08:00', text: 'The app keeps crashing when I open the attendance page for U-14 batch. It was working fine before the update yesterday.' },
+    { from: 'Support Agent', role: 'Dev Team', time: '2026-03-15 09:30', text: 'We apologize for the inconvenience, Arun. Can you share your phone model and app version? We are investigating this urgently.' },
+    { from: 'Arun P', role: 'Coach', time: '2026-03-15 09:45', text: 'Samsung Galaxy A54, app version 2.3.1. It crashes immediately, no error shown.' }
+  ]},
+  { id: 'TK-005', academy: 'Cricket Champions', subject: 'Need help setting up tournament', priority: 'Medium', status: 'In Progress', assigned: 'Support Team', created: '2026-03-08', userType: 'Academy Owner', userName: 'Rohit D', category: 'How-to', description: 'We want to set up an inter-academy tournament using the platform but cannot figure out the tournament module workflow.', messages: [
+    { from: 'Rohit D', role: 'Academy Owner', time: '2026-03-08 11:00', text: 'We are planning an inter-academy tournament next month. How do we set this up on the platform? The tournament section is confusing.' },
+    { from: 'Support Agent', role: 'Support Team', time: '2026-03-08 13:00', text: 'Hi Rohit, I will walk you through the steps. First, go to Tournaments > Create New. You will need to set the format (league/knockout), add participating teams, and define the schedule.' },
+    { from: 'Rohit D', role: 'Academy Owner', time: '2026-03-08 14:30', text: 'Thanks! I found the Create New option. But how do I invite other academies to participate?' }
+  ]},
+  { id: 'TK-006', academy: 'Dhoni Cricket School', subject: 'Content not loading properly', priority: 'Medium', status: 'In Progress', assigned: 'Dev Team', created: '2026-03-06', userType: 'Student', userName: 'Karthik S', category: 'Technical Issue', description: 'Training videos in the student app are not loading. Shows a spinning icon indefinitely. Tried on Wi-Fi and mobile data.', messages: [
+    { from: 'Karthik S', role: 'Student', time: '2026-03-06 16:00', text: 'The training videos are not loading at all. I just see a spinner that never stops. Tried both Wi-Fi and mobile data.' },
+    { from: 'Support Agent', role: 'Dev Team', time: '2026-03-06 17:00', text: 'Hi Karthik, we are aware of the issue. Our CDN provider had some downtime. Could you try clearing the app cache and restarting?' }
+  ]},
+  { id: 'TK-007', academy: 'KPL Cricket Academy', subject: 'How to upgrade from Free to Pro?', priority: 'Low', status: 'Resolved', assigned: 'Support Team', created: '2026-03-01', userType: 'Academy Owner', userName: 'Karthik L', category: 'How-to', description: 'We want to upgrade our academy plan from Free to Pro but cannot find the upgrade option in settings.', messages: [
+    { from: 'Karthik L', role: 'Academy Owner', time: '2026-03-01 10:00', text: 'Where is the option to upgrade from Free to Pro plan? I cannot find it anywhere in the settings.' },
+    { from: 'Support Agent', role: 'Support Team', time: '2026-03-01 11:00', text: 'Hi Karthik, go to Settings > Subscription > Upgrade Plan. You will see the Pro and Elite options there. Let me know if you need help with the payment process.' },
+    { from: 'Karthik L', role: 'Academy Owner', time: '2026-03-01 11:30', text: 'Found it! Thank you for the help. Upgrading now.' }
+  ]},
+  { id: 'TK-008', academy: 'Metro Cricket Hub', subject: 'Parent app login issues', priority: 'High', status: 'Open', assigned: 'Dev Team', created: '2026-03-16', userType: 'Parent', userName: 'Sanjay M', category: 'Technical Issue', description: 'Multiple parents are reporting they cannot log into the parent app. Getting "Invalid credentials" even with correct password. Started today morning.', messages: [
+    { from: 'Sanjay M', role: 'Parent', time: '2026-03-16 07:30', text: 'I cannot login to the parent app since this morning. It says invalid credentials but my password is correct. Other parents in our academy are also facing this.' },
+    { from: 'Support Agent', role: 'Dev Team', time: '2026-03-16 08:00', text: 'Thank you for reporting this, Sanjay. We are investigating this as a priority. It appears to be affecting the authentication service. We will update you shortly.' }
+  ]},
+  { id: 'TK-009', academy: 'Future Stars Academy', subject: 'Feature request: batch import students', priority: 'Low', status: 'Resolved', assigned: 'Product Team', created: '2026-02-28', userType: 'Academy Owner', userName: 'Prasad V', category: 'Feature Request', description: 'We have 50+ new students joining and adding them one by one is tedious. Need a CSV/Excel import feature for bulk student registration.', messages: [
+    { from: 'Prasad V', role: 'Academy Owner', time: '2026-02-28 09:00', text: 'We have a new batch of 50 students joining. Adding them one by one is very tedious. Can we get a bulk import feature?' },
+    { from: 'Support Agent', role: 'Product Team', time: '2026-02-28 12:00', text: 'Great suggestion, Prasad! We actually have a CSV import feature in development. It should be available in the next release (v2.4). For now, I can help you with a workaround using our API.' },
+    { from: 'Prasad V', role: 'Academy Owner', time: '2026-02-28 13:00', text: 'That is good to hear! Looking forward to the release. The API workaround would also help for now.' }
+  ]},
+  { id: 'TK-010', academy: 'Royal Cricket Academy', subject: 'Payment gateway timeout', priority: 'Medium', status: 'In Progress', assigned: 'Dev Team', created: '2026-03-05', userType: 'Academy Owner', userName: 'Sachin W', category: 'Technical Issue', description: 'Payment gateway times out when parents try to pay fees online. Multiple parents have complained about failed transactions.', messages: [
+    { from: 'Sachin W', role: 'Academy Owner', time: '2026-03-05 15:00', text: 'Parents are unable to pay fees online. The payment page times out after 30 seconds. This has been happening for the last 2 days.' },
+    { from: 'Support Agent', role: 'Dev Team', time: '2026-03-05 16:00', text: 'Hi Sachin, we are checking with our payment gateway provider. Meanwhile, could you check if this happens with all payment methods or just specific ones?' },
+    { from: 'Sachin W', role: 'Academy Owner', time: '2026-03-05 16:30', text: 'It happens with both UPI and card payments. Net banking seems to work sometimes.' }
+  ]},
+  { id: 'TK-011', academy: 'CBE Sports Academy', subject: 'Dashboard performance slow', priority: 'Low', status: 'Resolved', assigned: 'Dev Team', created: '2026-02-25', userType: 'Academy Owner', userName: 'Suresh M', category: 'Technical Issue', description: 'The academy dashboard takes over 10 seconds to load. Charts and student list are very slow to render.', messages: [
+    { from: 'Suresh M', role: 'Academy Owner', time: '2026-02-25 11:00', text: 'Our dashboard is extremely slow. It takes more than 10 seconds to load. With 200 students, the charts take forever to render.' },
+    { from: 'Support Agent', role: 'Dev Team', time: '2026-02-25 14:00', text: 'Thank you for the report, Suresh. We have identified a performance issue with large student datasets. A fix has been deployed — please try again and let us know.' },
+    { from: 'Suresh M', role: 'Academy Owner', time: '2026-02-25 15:00', text: 'Much better now! Dashboard loads in 2-3 seconds. Thank you for the quick fix.' }
+  ]},
+  { id: 'TK-012', academy: 'Southern Sports Club', subject: 'Account suspension inquiry', priority: 'High', status: 'Resolved', assigned: 'Support Team', created: '2026-02-20', userType: 'Academy Owner', userName: 'Velu N', category: 'Billing', description: 'Our account has been suspended but we believe the payment was made on time. Need this resolved urgently as coaching sessions are affected.', messages: [
+    { from: 'Velu N', role: 'Academy Owner', time: '2026-02-20 08:00', text: 'Our academy account has been suspended! We made the payment on Feb 15. Please check and restore access immediately.' },
+    { from: 'Support Agent', role: 'Support Team', time: '2026-02-20 09:00', text: 'Hi Velu, I can see the payment was received but there was a processing delay. I have escalated this to the billing team and your account should be restored within the hour.' },
+    { from: 'Velu N', role: 'Academy Owner', time: '2026-02-20 10:30', text: 'Account is restored now. Thank you for the quick resolution. Please ensure this does not happen again.' }
+  ]},
+  { id: 'TK-013', academy: 'Star Cricket Academy', subject: 'Unable to generate fee receipts', priority: 'Medium', status: 'Closed', assigned: 'Dev Team', created: '2026-02-10', userType: 'Academy Owner', userName: 'Vikram Singh', category: 'Bug Report', description: 'Fee receipt PDF generation was throwing errors. Issue was fixed in v2.2 patch.', messages: [
+    { from: 'Vikram Singh', role: 'Academy Owner', time: '2026-02-10 10:00', text: 'Fee receipt download is not working. Getting a blank PDF every time I try to generate a receipt for any student.' },
+    { from: 'Support Agent', role: 'Dev Team', time: '2026-02-10 12:00', text: 'We found the issue — a PDF library update broke the receipt template. Fix has been deployed in patch v2.2.1.' },
+    { from: 'Vikram Singh', role: 'Academy Owner', time: '2026-02-10 14:00', text: 'Receipts are generating correctly now. Thanks!' }
+  ]},
+  { id: 'TK-014', academy: 'Cricket Champions', subject: 'Coach app notification not working', priority: 'Low', status: 'Closed', assigned: 'Dev Team', created: '2026-02-05', userType: 'Coach', userName: 'Deepak Coach', category: 'Bug Report', description: 'Push notifications for session reminders were not being delivered to coaches. Fixed by updating FCM configuration.', messages: [
+    { from: 'Deepak Coach', role: 'Coach', time: '2026-02-05 09:00', text: 'I am not receiving any push notifications for upcoming sessions. Other coaches in our academy also report the same issue.' },
+    { from: 'Support Agent', role: 'Dev Team', time: '2026-02-05 11:00', text: 'We traced this to an expired FCM server key. It has been renewed and notifications should resume now.' },
+    { from: 'Deepak Coach', role: 'Coach', time: '2026-02-06 08:00', text: 'Got the notification for today morning session. All working now.' }
+  ]},
+  { id: 'TK-015', academy: 'SAM Cricket Academy', subject: 'Need help with curriculum setup', priority: 'Low', status: 'Closed', assigned: 'Support Team', created: '2026-01-28', userType: 'Coach', userName: 'Venkat Coach', category: 'How-to', description: 'Coach needed guidance on setting up stage-wise curriculum for batting skills. Walkthrough was provided and completed.', messages: [
+    { from: 'Venkat Coach', role: 'Coach', time: '2026-01-28 10:00', text: 'I need help setting up the stage-wise curriculum for our batting program. The documentation is not very clear on the skill mapping process.' },
+    { from: 'Support Agent', role: 'Support Team', time: '2026-01-28 11:30', text: 'Hi Venkat, I will schedule a screen-sharing session to walk you through it. Basically you go to Curriculum > Create Stage, then add skills under each stage with progression criteria.' },
+    { from: 'Venkat Coach', role: 'Coach', time: '2026-01-29 09:00', text: 'The walkthrough was very helpful. I have set up all 4 stages now. Thank you!' }
+  ]}
 ];
 
 // ---- Navigation ----
@@ -1290,33 +1350,41 @@ function renderSupport() {
   const openCount = tickets.filter(t => t.status === 'Open').length;
   const progressCount = tickets.filter(t => t.status === 'In Progress').length;
   const resolvedCount = tickets.filter(t => t.status === 'Resolved').length;
+  const closedCount = tickets.filter(t => t.status === 'Closed').length;
 
   return `
     <div class="breadcrumb"><a onclick="navigateAdmin('dashboard')">Home</a> <span>/</span> <span>Support Tickets</span></div>
     <h1 class="page-title">Support Tickets</h1>
     <p class="page-subtitle">Manage academy support requests</p>
 
-    <div class="metric-row" style="grid-template-columns:repeat(3,1fr);">
-      <div class="stat-card accent-blue">
+    <div class="metric-row" style="grid-template-columns:repeat(4,1fr);">
+      <div class="stat-card accent-blue" style="cursor:pointer;" onclick="filterTicketsByStatus('Open')">
         <div class="stat-card-header">
           <div class="stat-card-icon blue"><i class="fa-solid fa-envelope-open"></i></div>
         </div>
         <div class="stat-card-value">${openCount}</div>
         <div class="stat-card-label">Open</div>
       </div>
-      <div class="stat-card accent-orange">
+      <div class="stat-card accent-orange" style="cursor:pointer;" onclick="filterTicketsByStatus('In Progress')">
         <div class="stat-card-header">
           <div class="stat-card-icon orange"><i class="fa-solid fa-spinner"></i></div>
         </div>
         <div class="stat-card-value">${progressCount}</div>
         <div class="stat-card-label">In Progress</div>
       </div>
-      <div class="stat-card accent-green">
+      <div class="stat-card accent-green" style="cursor:pointer;" onclick="filterTicketsByStatus('Resolved')">
         <div class="stat-card-header">
           <div class="stat-card-icon green"><i class="fa-solid fa-check-circle"></i></div>
         </div>
         <div class="stat-card-value">${resolvedCount}</div>
         <div class="stat-card-label">Resolved</div>
+      </div>
+      <div class="stat-card accent-purple" style="cursor:pointer;" onclick="filterTicketsByStatus('Closed')">
+        <div class="stat-card-header">
+          <div class="stat-card-icon purple"><i class="fa-solid fa-lock"></i></div>
+        </div>
+        <div class="stat-card-value">${closedCount}</div>
+        <div class="stat-card-label">Closed</div>
       </div>
     </div>
 
@@ -1326,6 +1394,7 @@ function renderSupport() {
         <button class="tab-btn" onclick="filterTickets('Open', this)">Open <span class="tab-count">${openCount}</span></button>
         <button class="tab-btn" onclick="filterTickets('In Progress', this)">In Progress <span class="tab-count">${progressCount}</span></button>
         <button class="tab-btn" onclick="filterTickets('Resolved', this)">Resolved <span class="tab-count">${resolvedCount}</span></button>
+        <button class="tab-btn" onclick="filterTickets('Closed', this)">Closed <span class="tab-count">${closedCount}</span></button>
       </div>
       <button class="action-btn primary" onclick="showCreateTicketModal()"><i class="fa-solid fa-plus"></i> Create Ticket</button>
     </div>
@@ -1337,6 +1406,7 @@ function renderSupport() {
             <tr>
               <th>ID</th>
               <th>Academy</th>
+              <th>User</th>
               <th>Subject</th>
               <th>Priority</th>
               <th>Status</th>
@@ -1354,11 +1424,24 @@ function renderSupport() {
   `;
 }
 
+function userTypeBadge(userType) {
+  const iconMap = { 'Academy Owner': 'fa-building', 'Coach': 'fa-whistle', 'Student': 'fa-user-graduate', 'Parent': 'fa-user-shield' };
+  const colorMap = { 'Academy Owner': 'var(--accent)', 'Coach': 'var(--info)', 'Student': 'var(--success)', 'Parent': 'var(--warning)' };
+  const icon = iconMap[userType] || 'fa-user';
+  const color = colorMap[userType] || 'var(--text-secondary)';
+  return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:20px;background:color-mix(in srgb, ${color} 12%, transparent);color:${color};font-weight:500;white-space:nowrap;"><i class="fa-solid ${icon}" style="font-size:9px;"></i>${userType}</span>`;
+}
+
 function ticketRow(t) {
+  const closeBtn = t.status === 'Resolved' ? `<button class="action-btn" style="font-size:11px;padding:4px 8px;" onclick="event.stopPropagation(); closeTicketQuick('${t.id}')" title="Close Ticket"><i class="fa-solid fa-lock"></i></button>` : '';
   return `
     <tr onclick="showTicketDetail('${t.id}')" style="cursor:pointer;">
       <td><span style="font-weight:600;color:var(--accent);font-family:monospace;">${t.id}</span></td>
       <td>${t.academy}</td>
+      <td>
+        <div style="font-size:13px;font-weight:500;">${t.userName}</div>
+        ${userTypeBadge(t.userType)}
+      </td>
       <td><strong>${t.subject}</strong></td>
       <td>${statusBadge(t.priority, t.priority.toLowerCase())}</td>
       <td>${statusBadge(t.status, t.status.toLowerCase().replace(/\s+/g, '-'))}</td>
@@ -1366,7 +1449,7 @@ function ticketRow(t) {
       <td>${t.assigned}</td>
       <td>
         <button class="action-btn" onclick="event.stopPropagation(); showTicketDetail('${t.id}')"><i class="fa-solid fa-eye"></i></button>
-        <button class="action-btn" onclick="event.stopPropagation(); showToast('Ticket ${t.id} updated', 'success')"><i class="fa-solid fa-pen"></i></button>
+        ${closeBtn}
       </td>
     </tr>
   `;
@@ -1381,18 +1464,112 @@ function filterTickets(status, btn) {
   tbody.innerHTML = filtered.map(t => ticketRow(t)).join('');
 }
 
+function filterTicketsByStatus(status) {
+  const tabs = document.querySelectorAll('.tab-btn');
+  tabs.forEach(b => {
+    b.classList.remove('active');
+    if (b.textContent.trim().startsWith(status)) b.classList.add('active');
+  });
+  const tbody = document.getElementById('tickets-tbody');
+  if (!tbody) return;
+  const filtered = tickets.filter(t => t.status === status);
+  tbody.innerHTML = filtered.map(t => ticketRow(t)).join('');
+}
+
+function closeTicketQuick(id) {
+  const t = tickets.find(tk => tk.id === id);
+  if (!t) return;
+  t.status = 'Closed';
+  showToast('Ticket ' + id + ' closed successfully', 'success');
+  navigateAdmin('support');
+}
+
+function updateTicketStatus(id, newStatus) {
+  const t = tickets.find(tk => tk.id === id);
+  if (!t) return;
+  t.status = newStatus;
+  showToast('Ticket ' + id + ' marked as ' + newStatus, 'success');
+  document.querySelector('.modal-overlay')?.remove();
+  navigateAdmin('support');
+}
+
+function reassignTicket(id) {
+  const t = tickets.find(tk => tk.id === id);
+  if (!t) return;
+  showModal('Reassign Ticket ' + id, `
+    <div class="form-group">
+      <label>Assign To</label>
+      <select id="reassign-select">
+        <option ${t.assigned === 'Support Team' ? 'selected' : ''}>Support Team</option>
+        <option ${t.assigned === 'Dev Team' ? 'selected' : ''}>Dev Team</option>
+        <option ${t.assigned === 'Billing Team' ? 'selected' : ''}>Billing Team</option>
+        <option ${t.assigned === 'Product Team' ? 'selected' : ''}>Product Team</option>
+      </select>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+      <button class="action-btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+      <button class="action-btn primary" onclick="
+        var sel = document.getElementById('reassign-select');
+        var tk = tickets.find(function(x){return x.id==='${id}';});
+        if(tk) tk.assigned = sel.value;
+        showToast('Ticket ${id} reassigned to ' + sel.value, 'success');
+        this.closest('.modal-overlay').remove();
+        navigateAdmin('support');
+      "><i class="fa-solid fa-user-plus"></i> Reassign</button>
+    </div>
+  `);
+}
+
 function showTicketDetail(id) {
   const t = tickets.find(tk => tk.id === id);
   if (!t) return;
+
+  // Build conversation thread
+  const messagesHTML = (t.messages || []).map(m => {
+    const isSupport = m.role.includes('Team') || m.role === 'Support Agent';
+    const align = isSupport ? 'flex-end' : 'flex-start';
+    const bg = isSupport ? 'var(--accent)' : 'var(--bg-tertiary)';
+    const textColor = isSupport ? '#fff' : 'var(--text-primary)';
+    const labelColor = isSupport ? 'rgba(255,255,255,0.7)' : 'var(--text-secondary)';
+    return `
+      <div style="display:flex;justify-content:${align};margin-bottom:12px;">
+        <div style="max-width:80%;background:${bg};color:${textColor};padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5;">
+          <div style="font-size:11px;font-weight:600;margin-bottom:4px;color:${labelColor};">${m.from} <span style="font-weight:400;">&middot; ${m.role}</span> <span style="font-weight:400;margin-left:8px;">${m.time}</span></div>
+          ${m.text}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Build action buttons based on status
+  let actionButtons = '';
+  if (t.status === 'Open') {
+    actionButtons += `<button class="action-btn" onclick="updateTicketStatus('${t.id}', 'In Progress')"><i class="fa-solid fa-spinner"></i> Mark In Progress</button>`;
+    actionButtons += `<button class="action-btn" onclick="updateTicketStatus('${t.id}', 'Resolved')"><i class="fa-solid fa-check"></i> Mark Resolved</button>`;
+  } else if (t.status === 'In Progress') {
+    actionButtons += `<button class="action-btn" onclick="updateTicketStatus('${t.id}', 'Resolved')"><i class="fa-solid fa-check"></i> Mark Resolved</button>`;
+  } else if (t.status === 'Resolved') {
+    actionButtons += `<button class="action-btn primary" style="background:var(--text-secondary);" onclick="updateTicketStatus('${t.id}', 'Closed')"><i class="fa-solid fa-lock"></i> Close Ticket</button>`;
+  } else if (t.status === 'Closed') {
+    actionButtons += `<button class="action-btn" onclick="updateTicketStatus('${t.id}', 'Open')"><i class="fa-solid fa-lock-open"></i> Reopen</button>`;
+  }
+  actionButtons += `<button class="action-btn" onclick="this.closest('.modal-overlay').remove(); reassignTicket('${t.id}')"><i class="fa-solid fa-user-plus"></i> Reassign</button>`;
+
   showModal('Ticket ' + t.id, `
     <div style="margin-bottom:16px;">
       <h3 style="font-size:16px;font-weight:600;margin-bottom:8px;">${t.subject}</h3>
-      <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
         ${statusBadge(t.priority, t.priority.toLowerCase())}
         ${statusBadge(t.status, t.status.toLowerCase().replace(/\s+/g, '-'))}
+        ${statusBadge(t.category, 'draft')}
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <div>
+        <div style="font-size:12px;color:var(--text-secondary);">Raised By</div>
+        <div style="font-size:14px;font-weight:600;">${t.userName}</div>
+        <div style="margin-top:4px;">${userTypeBadge(t.userType)}</div>
+      </div>
       <div>
         <div style="font-size:12px;color:var(--text-secondary);">Academy</div>
         <div style="font-size:14px;font-weight:600;">${t.academy}</div>
@@ -1405,21 +1582,37 @@ function showTicketDetail(id) {
         <div style="font-size:12px;color:var(--text-secondary);">Created</div>
         <div style="font-size:14px;font-weight:600;">${t.created}</div>
       </div>
-      <div>
-        <div style="font-size:12px;color:var(--text-secondary);">Last Updated</div>
-        <div style="font-size:14px;font-weight:600;">${t.created}</div>
-      </div>
     </div>
     <div style="padding:16px;background:var(--bg-tertiary);border-radius:var(--radius-sm);margin-bottom:16px;">
       <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">Description</div>
-      <div style="font-size:13px;color:var(--text-primary);">The academy has reported an issue with ${t.subject.toLowerCase()}. This needs to be investigated and resolved at the earliest.</div>
+      <div style="font-size:13px;color:var(--text-primary);">${t.description}</div>
     </div>
-    <div style="display:flex;gap:8px;">
-      <button class="action-btn primary" onclick="showToast('Reply sent', 'success')"><i class="fa-solid fa-reply"></i> Reply</button>
-      <button class="action-btn" onclick="showToast('Ticket ${t.id} marked as resolved', 'success'); this.closest('.modal-overlay').remove();">
-        <i class="fa-solid fa-check"></i> Mark Resolved
-      </button>
-      <button class="action-btn" onclick="showToast('Ticket reassigned', 'success')"><i class="fa-solid fa-user-plus"></i> Reassign</button>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:12px;">Conversation Thread</div>
+      <div style="max-height:300px;overflow-y:auto;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-sm);border:1px solid var(--border);">
+        ${messagesHTML || '<div style="font-size:13px;color:var(--text-secondary);text-align:center;padding:20px;">No messages yet</div>'}
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <textarea id="ticket-reply-input" placeholder="Type your reply..." style="width:100%;min-height:60px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--text-primary);font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+        <button class="action-btn primary" onclick="
+          var input = document.getElementById('ticket-reply-input');
+          var text = input ? input.value.trim() : '';
+          if (!text) { showToast('Please enter a reply', 'error'); return; }
+          var tk = tickets.find(function(x){return x.id==='${t.id}';});
+          if (tk && tk.messages) { tk.messages.push({from:'Support Agent',role:tk.assigned,time:new Date().toISOString().slice(0,16).replace('T',' '),text:text}); }
+          showToast('Reply sent successfully', 'success');
+          this.closest('.modal-overlay').remove();
+          showTicketDetail('${t.id}');
+        "><i class="fa-solid fa-paper-plane"></i> Send Reply</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:16px;">
+      ${actionButtons}
     </div>
   `);
 }

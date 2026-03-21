@@ -1,0 +1,24 @@
+{
+  "id": "soruban-sports",
+  "name": "soruban-sports",
+  "path": "D:\\clients\\soruban\\soruban-sports",
+  "default_branch": "main",
+  "solutions": [
+    {
+      "id": "soruban-sports-soruban-sports",
+      "name": "soruban-sports",
+      "path": "",
+      "stack": {
+        "language": "General",
+        "framework": null,
+        "package_manager": null,
+        "detected_patterns": []
+      },
+      "build_command": null,
+      "test_command": null,
+      "dev_command": null,
+      "port": null
+    }
+  ],
+  "git_remote": "https://github.com/sorubantech/soruban-sports.git"
+}

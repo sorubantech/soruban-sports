@@ -126,6 +126,25 @@ const matches = [
   }
 ];
 
+// --- Support Tickets ---
+const supportTickets = [
+  { id: 'TK-001', subject: 'Cannot upload student photos', category: 'Technical Issue', priority: 'High', status: 'Open', created: '14 Mar 2026', lastUpdate: '15 Mar 2026', description: 'When trying to upload photos from the student profile page, the upload fails with an error message.', messages: [
+    { from: 'Venkat', role: 'Academy Owner', time: '14 Mar, 10:30 AM', text: 'Getting an error when uploading student photos. Tried on multiple devices.' },
+    { from: 'Support Team', role: 'Soruban Support', time: '15 Mar, 9:00 AM', text: 'We are investigating this issue. Could you share a screenshot of the error?' }
+  ]},
+  { id: 'TK-002', subject: 'Need help with batch scheduling', category: 'How-to', priority: 'Low', status: 'Resolved', created: '10 Mar 2026', lastUpdate: '11 Mar 2026', description: 'How to set up recurring batch schedules for weekends?', messages: [
+    { from: 'Venkat', role: 'Academy Owner', time: '10 Mar, 2:00 PM', text: 'How do I set up weekend batches with different timings?' },
+    { from: 'Support Team', role: 'Soruban Support', time: '11 Mar, 10:00 AM', text: 'Go to Batches > Create Batch > Select days as Sat-Sun and set your preferred timing. You can also set different timings for each day.' },
+    { from: 'Venkat', role: 'Academy Owner', time: '11 Mar, 11:30 AM', text: 'Got it, thanks!' }
+  ]},
+  { id: 'TK-003', subject: 'Fee report not showing correct totals', category: 'Bug Report', priority: 'Medium', status: 'In Progress', created: '12 Mar 2026', lastUpdate: '14 Mar 2026', description: 'The fee management report shows incorrect totals for February.', messages: [
+    { from: 'Coach Ravi', role: 'Head Coach', time: '12 Mar, 4:00 PM', text: 'February fee report total doesn\'t match individual student payments.' },
+    { from: 'Support Team', role: 'Soruban Support', time: '13 Mar, 11:00 AM', text: 'Thanks for reporting. We\'ve identified the issue - it\'s related to partial payments not being included in the summary. Fix is being deployed.' }
+  ]}
+];
+
+let selectedTicketId = 'TK-001';
+
 let selectedMatchId = 1;
 
 // --- Curriculum ---
@@ -1436,14 +1455,17 @@ screens['more'] = () => `
     <!-- Support -->
     <div class="section-title" style="margin-bottom:10px;">Support</div>
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;">
+      <div class="chat-item" onclick="navigateTo('support-tickets')">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;"><i class="fas fa-headset" style="color:var(--accent);font-size:14px;"></i></div>
+        <div class="chat-info"><div class="chat-name" style="font-size:14px;">Technical Support</div><div style="font-size:11px;color:var(--text-tertiary);">Raise & track support tickets</div></div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="chat-unread">${supportTickets.filter(t => t.status !== 'Resolved').length}</div>
+          <i class="fas fa-chevron-right" style="color:var(--text-tertiary);font-size:12px;"></i>
+        </div>
+      </div>
       <div class="chat-item" onclick="showToast('Help center opening...', 'info')">
         <div style="width:36px;height:36px;border-radius:10px;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;"><i class="fas fa-question-circle" style="color:var(--text-secondary);font-size:14px;"></i></div>
         <div class="chat-info"><div class="chat-name" style="font-size:14px;">Help & FAQ</div></div>
-        <i class="fas fa-chevron-right" style="color:var(--text-tertiary);font-size:12px;"></i>
-      </div>
-      <div class="chat-item" onclick="showToast('Contact support: support@soruban.com', 'info')">
-        <div style="width:36px;height:36px;border-radius:10px;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;"><i class="fas fa-envelope" style="color:var(--text-secondary);font-size:14px;"></i></div>
-        <div class="chat-info"><div class="chat-name" style="font-size:14px;">Contact Us</div></div>
         <i class="fas fa-chevron-right" style="color:var(--text-tertiary);font-size:12px;"></i>
       </div>
       <div class="chat-item" onclick="showModal('Logout', 'Are you sure you want to log out of the Academy Staff App?', [{label: 'Cancel', class: 'btn-ghost', onclick: 'closeModal()'}, {label: 'Logout', class: 'btn-primary', onclick: 'closeModal();navigateTo(\\\'splash\\\')'}])" style="border-bottom:none;">
@@ -2400,6 +2422,242 @@ function updateScoreDisplay() {
 }
 
 // ============================================
+// TECHNICAL SUPPORT SCREENS
+// ============================================
+
+screens['support-tickets'] = () => {
+  const openCount = supportTickets.filter(t => t.status === 'Open').length;
+  const inProgressCount = supportTickets.filter(t => t.status === 'In Progress').length;
+  const resolvedCount = supportTickets.filter(t => t.status === 'Resolved').length;
+
+  const statusIcon = (status) => {
+    if (status === 'Open') return '<i class="fas fa-exclamation-circle" style="color:var(--warning);font-size:16px;"></i>';
+    if (status === 'In Progress') return '<i class="fas fa-spinner" style="color:var(--info);font-size:16px;"></i>';
+    return '<i class="fas fa-check-circle" style="color:var(--success);font-size:16px;"></i>';
+  };
+
+  const priorityStyle = (priority) => {
+    if (priority === 'High') return 'background:var(--danger-bg);color:var(--danger);';
+    if (priority === 'Medium') return 'background:var(--warning-bg);color:var(--warning);';
+    return 'background:var(--bg-tertiary);color:var(--text-secondary);';
+  };
+
+  const categoryStyle = (category) => {
+    if (category === 'Technical Issue') return 'background:var(--danger-bg);color:var(--danger);';
+    if (category === 'Bug Report') return 'background:var(--warning-bg);color:var(--warning);';
+    if (category === 'How-to') return 'background:var(--info-bg);color:var(--info);';
+    if (category === 'Feature Request') return 'background:var(--accent-bg);color:var(--accent);';
+    return 'background:var(--bg-tertiary);color:var(--text-secondary);';
+  };
+
+  return `
+  <div class="screen-enter">
+    <div style="padding:16px 16px 0;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <button class="btn btn-ghost btn-icon" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+        <h3 style="font-size:var(--font-size-lg);font-weight:700;flex:1;">Technical Support</h3>
+        <i class="fas fa-headset" style="color:var(--accent);font-size:18px;"></i>
+      </div>
+
+      <!-- Stats Row -->
+      <div style="display:flex;gap:10px;margin-bottom:16px;" class="fade-in-up">
+        <div style="flex:1;background:var(--warning-bg);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:20px;font-weight:800;color:var(--warning);">${openCount}</div>
+          <div style="font-size:11px;color:var(--warning);font-weight:600;">Open</div>
+        </div>
+        <div style="flex:1;background:var(--info-bg);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:20px;font-weight:800;color:var(--info);">${inProgressCount}</div>
+          <div style="font-size:11px;color:var(--info);font-weight:600;">In Progress</div>
+        </div>
+        <div style="flex:1;background:var(--success-bg);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:20px;font-weight:800;color:var(--success);">${resolvedCount}</div>
+          <div style="font-size:11px;color:var(--success);font-weight:600;">Resolved</div>
+        </div>
+      </div>
+
+      <!-- Raise New Ticket Button -->
+      <button class="btn btn-primary" style="width:100%;margin-bottom:16px;" onclick="navigateTo('create-ticket')">
+        <i class="fas fa-plus"></i> Raise New Ticket
+      </button>
+
+      <!-- Filter Tabs -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;">
+        <div class="filter-chip active" onclick="toggleFilter(this)">All</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">Open</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">In Progress</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">Resolved</div>
+      </div>
+    </div>
+
+    <!-- Ticket List -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0 16px 24px;">
+      ${supportTickets.map((t, i) => `
+        <div class="chat-item fade-in-up${i === supportTickets.length - 1 ? '" style="border-bottom:none;"' : '"'} onclick="selectedTicketId='${t.id}';navigateTo('ticket-detail')">
+          <div style="flex-shrink:0;">${statusIcon(t.status)}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+              <span style="font-weight:700;font-size:var(--font-size-sm);color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${t.subject}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;">
+              <span style="font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;${categoryStyle(t.category)}">${t.category}</span>
+              <span style="font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;${priorityStyle(t.priority)}">${t.priority}</span>
+            </div>
+            <div style="font-size:var(--font-size-xs);color:var(--text-tertiary);">${t.id} · Updated ${t.lastUpdate}</div>
+          </div>
+          <i class="fas fa-chevron-right" style="color:var(--text-tertiary);font-size:12px;flex-shrink:0;"></i>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+`;
+};
+
+screens['ticket-detail'] = () => {
+  const ticket = supportTickets.find(t => t.id === selectedTicketId) || supportTickets[0];
+
+  const statusStyle = (status) => {
+    if (status === 'Open') return 'background:var(--warning-bg);color:var(--warning);';
+    if (status === 'In Progress') return 'background:var(--info-bg);color:var(--info);';
+    return 'background:var(--success-bg);color:var(--success);';
+  };
+
+  const priorityStyle = (priority) => {
+    if (priority === 'High') return 'background:var(--danger-bg);color:var(--danger);';
+    if (priority === 'Medium') return 'background:var(--warning-bg);color:var(--warning);';
+    return 'background:var(--bg-tertiary);color:var(--text-secondary);';
+  };
+
+  const categoryStyle = (category) => {
+    if (category === 'Technical Issue') return 'background:var(--danger-bg);color:var(--danger);';
+    if (category === 'Bug Report') return 'background:var(--warning-bg);color:var(--warning);';
+    if (category === 'How-to') return 'background:var(--info-bg);color:var(--info);';
+    if (category === 'Feature Request') return 'background:var(--accent-bg);color:var(--accent);';
+    return 'background:var(--bg-tertiary);color:var(--text-secondary);';
+  };
+
+  const isSupport = (msg) => msg.role === 'Soruban Support';
+
+  return `
+  <div class="screen-enter" style="display:flex;flex-direction:column;height:100%;">
+    <!-- Header -->
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+      <button class="btn btn-ghost btn-icon" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:var(--font-size-base);color:var(--text-primary);">${ticket.id}</div>
+        <div style="font-size:var(--font-size-xs);color:var(--text-tertiary);">Created ${ticket.created}</div>
+      </div>
+      <span style="font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;${statusStyle(ticket.status)}">${ticket.status}</span>
+    </div>
+
+    <!-- Ticket Info -->
+    <div style="padding:16px;border-bottom:1px solid var(--border);">
+      <h3 style="font-size:var(--font-size-base);font-weight:700;color:var(--text-primary);margin-bottom:8px;">${ticket.subject}</h3>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+        <span style="font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600;${categoryStyle(ticket.category)}">${ticket.category}</span>
+        <span style="font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600;${priorityStyle(ticket.priority)}">${ticket.priority} Priority</span>
+      </div>
+      <p style="font-size:var(--font-size-sm);color:var(--text-secondary);line-height:1.5;">${ticket.description}</p>
+    </div>
+
+    <!-- Conversation -->
+    <div style="flex:1;overflow-y:auto;padding:16px;">
+      <div class="section-title" style="margin-bottom:12px;">Conversation</div>
+      ${ticket.messages.map(m => `
+        <div style="display:flex;${isSupport(m) ? '' : 'justify-content:flex-end;'}margin-bottom:14px;" class="fade-in-up">
+          <div style="max-width:85%;padding:12px 14px;border-radius:${isSupport(m) ? '14px 14px 14px 4px' : '14px 14px 4px 14px'};background:${isSupport(m) ? 'var(--bg-card)' : 'var(--accent)'};color:${isSupport(m) ? 'var(--text-primary)' : '#fff'};font-size:var(--font-size-sm);line-height:1.5;${isSupport(m) ? 'border:1px solid var(--border);' : ''}">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+              <span style="font-size:11px;font-weight:700;${isSupport(m) ? 'color:var(--info);' : 'color:rgba(255,255,255,0.85);'}">${m.from}</span>
+              <span style="font-size:10px;${isSupport(m) ? 'color:var(--text-tertiary);' : 'color:rgba(255,255,255,0.6);'}">${m.role}</span>
+            </div>
+            <div>${m.text}</div>
+            <div style="font-size:10px;${isSupport(m) ? 'color:var(--text-tertiary);' : 'color:rgba(255,255,255,0.7);'}margin-top:6px;text-align:right;">${m.time}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Reply Input -->
+    <div style="padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg-primary);">
+      <i class="fas fa-paperclip" style="font-size:20px;color:var(--text-tertiary);cursor:pointer;" onclick="showToast('Attach file', 'info')"></i>
+      <input type="text" style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:14px;outline:none;" placeholder="Type your reply...">
+      <div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="showToast('Reply sent!', 'success')">
+        <i class="fas fa-paper-plane" style="color:#fff;font-size:14px;"></i>
+      </div>
+    </div>
+  </div>
+`;
+};
+
+screens['create-ticket'] = () => `
+  <div class="screen-enter">
+    <div style="padding:16px 16px 0;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+        <button class="btn btn-ghost btn-icon" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+        <h3 style="font-size:var(--font-size-lg);font-weight:700;flex:1;">Raise a Ticket</h3>
+      </div>
+
+      <!-- Category -->
+      <div style="margin-bottom:16px;" class="fade-in-up">
+        <label style="font-size:var(--font-size-sm);font-weight:600;color:var(--text-primary);display:block;margin-bottom:6px;">Category</label>
+        <select style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:14px;outline:none;appearance:auto;">
+          <option value="">Select a category...</option>
+          <option value="Technical Issue">Technical Issue</option>
+          <option value="Bug Report">Bug Report</option>
+          <option value="How-to">How-to</option>
+          <option value="Feature Request">Feature Request</option>
+          <option value="Billing">Billing</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <!-- Subject -->
+      <div style="margin-bottom:16px;" class="fade-in-up">
+        <label style="font-size:var(--font-size-sm);font-weight:600;color:var(--text-primary);display:block;margin-bottom:6px;">Subject</label>
+        <input type="text" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:14px;outline:none;box-sizing:border-box;" placeholder="Brief summary of the issue...">
+      </div>
+
+      <!-- Priority -->
+      <div style="margin-bottom:16px;" class="fade-in-up">
+        <label style="font-size:var(--font-size-sm);font-weight:600;color:var(--text-primary);display:block;margin-bottom:6px;">Priority</label>
+        <div style="display:flex;gap:10px;">
+          <label style="flex:1;display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;">
+            <input type="radio" name="priority" value="Low" checked style="accent-color:var(--accent);">
+            <span style="font-size:14px;color:var(--text-primary);">Low</span>
+          </label>
+          <label style="flex:1;display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;">
+            <input type="radio" name="priority" value="Medium" style="accent-color:var(--accent);">
+            <span style="font-size:14px;color:var(--text-primary);">Medium</span>
+          </label>
+          <label style="flex:1;display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;">
+            <input type="radio" name="priority" value="High" style="accent-color:var(--accent);">
+            <span style="font-size:14px;color:var(--text-primary);">High</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div style="margin-bottom:16px;" class="fade-in-up">
+        <label style="font-size:var(--font-size-sm);font-weight:600;color:var(--text-primary);display:block;margin-bottom:6px;">Description</label>
+        <textarea style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-size:14px;outline:none;resize:vertical;min-height:120px;font-family:inherit;box-sizing:border-box;" placeholder="Describe your issue in detail..."></textarea>
+      </div>
+
+      <!-- Attach Screenshot -->
+      <div style="margin-bottom:24px;" class="fade-in-up">
+        <button class="btn btn-ghost" style="width:100%;border:1px dashed var(--border);padding:14px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="showToast('Screenshot attached', 'success')">
+          <i class="fas fa-camera" style="color:var(--text-tertiary);"></i>
+          <span style="font-size:14px;color:var(--text-secondary);">Attach Screenshot (Optional)</span>
+        </button>
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn btn-primary" style="width:100%;margin-bottom:24px;" onclick="showToast('Ticket submitted successfully!', 'success');setTimeout(()=>goBack(),500);">
+        <i class="fas fa-paper-plane"></i> Submit Ticket
+      </button>
+    </div>
+  </div>
+`;
+
+// ============================================
 // NAVIGATION CONFIG
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -2410,7 +2668,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'students': ['student-detail', 'score-skill', 'add-student', 'promote-student'],
       'attendance': ['attendance-report'],
       'feed': ['create-post'],
-      'more': ['curriculum', 'fee-management', 'staff-chat', 'admissions', 'staff-management', 'settings', 'chat-detail', 'matches', 'match-detail', 'create-match']
+      'more': ['curriculum', 'fee-management', 'staff-chat', 'admissions', 'staff-management', 'settings', 'chat-detail', 'matches', 'match-detail', 'create-match', 'support-tickets', 'ticket-detail', 'create-ticket']
     }
   });
 });

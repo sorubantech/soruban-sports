@@ -224,6 +224,7 @@ function navigateAdmin(page) {
   switch (page) {
     case 'dashboard': renderDashboard(container); break;
     case 'students': renderStudents(container); break;
+    case 'admissions': renderAdmissions(container); break;
     case 'curriculum': renderCurriculum(container); break;
     case 'assessments': renderAssessments(container); break;
     case 'attendance': renderAttendance(container); break;
@@ -712,6 +713,183 @@ function showAddStudentModal() {
       <button class="action-btn primary" onclick="showToast('Student added successfully!','success');closeModal()">Add Student</button>
     </div>
   `);
+}
+
+// ==============================
+// PAGE: Admissions
+// ==============================
+const dashboardAdmissions = [
+  { id: 1, name: 'Dhruv Patel', age: 11, experience: '2 years club cricket', preferredBatch: 'Morning U-12', parent: 'Mr. Rajesh Patel', parentPhone: '+91 98765 12340', appliedDate: '12 Mar 2026', status: 'pending', previousAcademy: 'Self-taught', medicalNotes: 'None' },
+  { id: 2, name: 'Sneha R', age: 13, experience: 'School team captain', preferredBatch: 'Evening U-14', parent: 'Mrs. Lakshmi R', parentPhone: '+91 98765 56780', appliedDate: '14 Mar 2026', status: 'meeting-scheduled', meetingDate: '22 Mar 2026', meetingTime: '10:00 AM', meetingWith: 'Head Coach Venkat', previousAcademy: 'VB Cricket Academy', medicalNotes: 'Mild asthma' },
+  { id: 3, name: 'Arjun V', age: 9, experience: 'Beginner — no prior coaching', preferredBatch: 'Morning U-12', parent: 'Mr. Venkatesh V', parentPhone: '+91 98765 99010', appliedDate: '15 Mar 2026', status: 'pending', previousAcademy: 'None', medicalNotes: 'None' },
+  { id: 4, name: 'Tanya K', age: 10, experience: '1 year school team', preferredBatch: 'Morning U-12', parent: 'Mrs. Kavitha K', parentPhone: '+91 98765 33440', appliedDate: '18 Mar 2026', status: 'accepted', previousAcademy: 'None', medicalNotes: 'None', acceptedDate: '20 Mar 2026', assignedBatch: 'Morning U-12', assignedStage: 'Stage 1' },
+  { id: 5, name: 'Sathya R', age: 11, experience: 'District U-12 player', preferredBatch: 'Evening U-14', parent: 'Mr. Ramesh', parentPhone: '+91 98765 77880', appliedDate: '19 Mar 2026', status: 'pending', previousAcademy: 'City Cricket Club', medicalNotes: 'None' }
+];
+
+let admissionDashFilter = 'all';
+
+function renderAdmissions(container) {
+  const pendingCount = dashboardAdmissions.filter(a => a.status === 'pending').length;
+  const meetingCount = dashboardAdmissions.filter(a => a.status === 'meeting-scheduled').length;
+  const acceptedCount = dashboardAdmissions.filter(a => a.status === 'accepted').length;
+  const filtered = admissionDashFilter === 'all' ? dashboardAdmissions : dashboardAdmissions.filter(a => a.status === admissionDashFilter);
+
+  const statusBadge = (status) => {
+    if (status === 'pending') return '<span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--radius-full);background:#fef3c7;color:#d97706;">New</span>';
+    if (status === 'meeting-scheduled') return '<span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--radius-full);background:#dbeafe;color:#2563eb;">Meeting Set</span>';
+    if (status === 'accepted') return '<span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--radius-full);background:#d1fae5;color:#059669;">Accepted</span>';
+    return '<span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:var(--radius-full);background:#fee2e2;color:#dc2626;">Rejected</span>';
+  };
+
+  container.innerHTML = `
+    <h2 class="page-title">Admissions</h2>
+    <p class="page-subtitle">Review applications, schedule meetings, and onboard students</p>
+
+    <!-- Stat Cards -->
+    <div class="stats-grid" style="margin-bottom:24px;">
+      <div class="stat-card" onclick="admissionDashFilter='all';navigateAdmin('admissions');" style="cursor:pointer;">
+        <div class="stat-card-icon" style="background:#ede9fe;"><i class="fa-solid fa-users" style="color:#7c3aed;"></i></div>
+        <div class="stat-card-value">${dashboardAdmissions.length}</div>
+        <div class="stat-card-label">Total Applications</div>
+      </div>
+      <div class="stat-card" onclick="admissionDashFilter='pending';navigateAdmin('admissions');" style="cursor:pointer;">
+        <div class="stat-card-icon" style="background:#fef3c7;"><i class="fa-solid fa-clock" style="color:#d97706;"></i></div>
+        <div class="stat-card-value">${pendingCount}</div>
+        <div class="stat-card-label">Pending Review</div>
+      </div>
+      <div class="stat-card" onclick="admissionDashFilter='meeting-scheduled';navigateAdmin('admissions');" style="cursor:pointer;">
+        <div class="stat-card-icon" style="background:#dbeafe;"><i class="fa-solid fa-calendar-check" style="color:#2563eb;"></i></div>
+        <div class="stat-card-value">${meetingCount}</div>
+        <div class="stat-card-label">Meetings Scheduled</div>
+      </div>
+      <div class="stat-card" onclick="admissionDashFilter='accepted';navigateAdmin('admissions');" style="cursor:pointer;">
+        <div class="stat-card-icon" style="background:#d1fae5;"><i class="fa-solid fa-check-circle" style="color:#059669;"></i></div>
+        <div class="stat-card-value">${acceptedCount}</div>
+        <div class="stat-card-label">Accepted</div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:20px;">
+      ${['all', 'pending', 'meeting-scheduled', 'accepted'].map(f => `
+        <button class="action-btn ${admissionDashFilter === f ? 'primary' : ''}" onclick="admissionDashFilter='${f}';navigateAdmin('admissions');" style="text-transform:capitalize;">${f === 'meeting-scheduled' ? 'Meeting Set' : f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}</button>
+      `).join('')}
+    </div>
+
+    <!-- Applications Table -->
+    <div class="data-table-wrap" style="margin-bottom:24px;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Age</th>
+            <th>Experience</th>
+            <th>Preferred Batch</th>
+            <th>Parent</th>
+            <th>Applied</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filtered.map(a => `
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:36px;height:36px;border-radius:var(--radius-full);background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--accent);">${a.name.split(' ').map(n=>n[0]).join('')}</div>
+                  <div>
+                    <div style="font-weight:600;">${a.name}</div>
+                    ${a.previousAcademy !== 'None' ? `<div style="font-size:11px;color:var(--text-tertiary);">From: ${a.previousAcademy}</div>` : ''}
+                  </div>
+                </div>
+              </td>
+              <td>${a.age}</td>
+              <td>${a.experience}</td>
+              <td>${a.preferredBatch}</td>
+              <td>
+                <div>${a.parent}</div>
+                <div style="font-size:11px;color:var(--text-tertiary);">${a.parentPhone}</div>
+              </td>
+              <td>${a.appliedDate}</td>
+              <td>${statusBadge(a.status)}
+                ${a.status === 'meeting-scheduled' ? `<div style="font-size:10px;color:var(--text-tertiary);margin-top:4px;">${a.meetingDate}, ${a.meetingTime}</div>` : ''}
+              </td>
+              <td>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${a.status === 'pending' ? `
+                    <button class="action-btn" style="font-size:11px;" onclick="showAdmissionScheduleModal('${a.name}')"><i class="fa-solid fa-calendar"></i> Schedule</button>
+                    <button class="action-btn primary" style="font-size:11px;" onclick="showAdmissionAdmitModal('${a.name}')"><i class="fa-solid fa-check"></i> Admit</button>
+                    <button class="action-btn" style="font-size:11px;color:#dc2626;border-color:#dc2626;" onclick="showToast('${a.name} rejected','warning')"><i class="fa-solid fa-times"></i></button>
+                  ` : ''}
+                  ${a.status === 'meeting-scheduled' ? `
+                    <button class="action-btn primary" style="font-size:11px;" onclick="showAdmissionAdmitModal('${a.name}')"><i class="fa-solid fa-check"></i> Admit</button>
+                    <button class="action-btn" style="font-size:11px;color:#dc2626;border-color:#dc2626;" onclick="showToast('${a.name} rejected after meeting','warning')"><i class="fa-solid fa-times"></i></button>
+                  ` : ''}
+                  ${a.status === 'accepted' ? `
+                    <span style="font-size:11px;color:var(--text-tertiary);"><i class="fa-solid fa-check-double"></i> Onboarded</span>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    ${meetingCount > 0 ? `
+    <!-- Upcoming Meetings Section -->
+    <h3 style="margin-bottom:16px;"><i class="fa-solid fa-calendar-check" style="color:var(--accent);margin-right:8px;"></i>Upcoming Meetings</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:16px;margin-bottom:24px;">
+      ${dashboardAdmissions.filter(a => a.status === 'meeting-scheduled').map(a => `
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div style="width:44px;height:44px;border-radius:var(--radius-full);background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:var(--accent);">${a.name.split(' ').map(n=>n[0]).join('')}</div>
+            <div>
+              <div style="font-weight:700;font-size:15px;">${a.name}</div>
+              <div style="font-size:12px;color:var(--text-tertiary);">Age ${a.age} · ${a.experience}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--bg-tertiary);border-radius:8px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><i class="fa-solid fa-calendar" style="color:var(--accent);width:18px;"></i><strong>${a.meetingDate}</strong></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><i class="fa-solid fa-clock" style="color:var(--accent);width:18px;"></i><strong>${a.meetingTime}</strong></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><i class="fa-solid fa-user" style="color:var(--accent);width:18px;"></i>${a.meetingWith || 'Head Coach Venkat'}</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><i class="fa-solid fa-phone" style="color:var(--accent);width:18px;"></i>${a.parentPhone}</div>
+            ${a.medicalNotes !== 'None' ? `<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#dc2626;"><i class="fa-solid fa-notes-medical" style="width:18px;"></i>${a.medicalNotes}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="action-btn" style="flex:1;" onclick="showToast('Reschedule option for ${a.name}','info')"><i class="fa-solid fa-clock-rotate-left"></i> Reschedule</button>
+            <button class="action-btn primary" style="flex:1;" onclick="showAdmissionAdmitModal('${a.name}')"><i class="fa-solid fa-check"></i> Admit</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+  `;
+}
+
+function showAdmissionScheduleModal(name) {
+  showModal('Schedule Meeting — ' + name, \`
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Date</label><input type="date" value="2026-03-25" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;"></div>
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Time</label><select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;"><option>9:00 AM</option><option>9:30 AM</option><option selected>10:00 AM</option><option>10:30 AM</option><option>11:00 AM</option><option>4:00 PM</option><option>5:00 PM</option></select></div>
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Meeting With</label><select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;"><option selected>Head Coach Venkat</option><option>Coach Ravi</option><option>Coach Priya</option></select></div>
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Note to Parent</label><textarea style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:13px;min-height:60px;resize:vertical;" placeholder="Instructions for parent...">Please bring the student along. We will conduct a brief skill assessment and discuss the coaching program.</textarea></div>
+      <div style="padding:10px;background:#dbeafe;border-radius:8px;font-size:12px;color:#1e40af;"><i class="fa-solid fa-info-circle" style="margin-right:4px;"></i> Parent will be notified via app notification and SMS.</div>
+    </div>
+  \`, [{ label: 'Schedule & Notify Parent', class: 'primary', onclick: "closeModal();showToast('Meeting scheduled! Parent notified.','success')" }]);
+}
+
+function showAdmissionAdmitModal(name) {
+  showModal('Admit Student — ' + name, \`
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Assign Role</label><select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;"><option>Batsman</option><option>Bowler (Fast)</option><option>Bowler (Spin)</option><option>Allrounder</option><option>Wicketkeeper</option></select></div>
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Starting Stage</label><select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;"><option selected>Stage 1 — Foundation</option><option>Stage 2 — Developing</option><option>Stage 3 — Intermediate</option></select></div>
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Assign Batch</label><select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;"><option>Morning U-12</option><option>Evening U-14</option><option>Weekend All Ages</option></select></div>
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Start Date</label><input type="date" value="2026-04-01" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;"></div>
+      <div><label style="font-weight:600;display:block;margin-bottom:4px;">Monthly Fee (₹)</label><input type="text" value="3,500" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;"></div>
+      <div style="padding:10px;background:#d1fae5;border-radius:8px;font-size:12px;color:#065f46;"><i class="fa-solid fa-check-circle" style="margin-right:4px;"></i> Student and parent will be notified. They can start from the assigned date.</div>
+    </div>
+  \`, [{ label: 'Confirm Admission', class: 'primary', onclick: "closeModal();showToast('" + name + " admitted successfully!','success')" }]);
 }
 
 // ==============================

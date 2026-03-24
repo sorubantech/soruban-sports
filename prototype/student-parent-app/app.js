@@ -143,9 +143,63 @@ const certificates = [
 
 // --- Academies (for search) ---
 const academies = [
-  { id: 1, name: 'SAM Cricket Academy', rating: 4.6, distance: '2.1 km', students: 180, location: 'Nungambakkam, Chennai', batches: ['U-10', 'U-12', 'U-14', 'U-16', 'Senior'], fee: '3,500/month' },
-  { id: 2, name: 'MRF Pace Foundation', rating: 4.8, distance: '5.4 km', students: 120, location: 'Chepauk, Chennai', batches: ['U-14', 'U-16', 'U-19'], fee: '5,000/month' },
-  { id: 3, name: 'VB Cricket Academy', rating: 4.3, distance: '3.8 km', students: 95, location: 'T. Nagar, Chennai', batches: ['U-10', 'U-12', 'U-14'], fee: '2,800/month' }
+  {
+    id: 1, name: 'SAM Cricket Academy', rating: 4.6, distance: '2.1 km', students: 180,
+    location: 'RS Puram, Coimbatore', batches: ['U-10', 'U-12', 'U-14', 'U-16', 'Senior'], fee: '3,500/month',
+    established: '2018', tagline: 'Building Champions from Grassroots',
+    description: 'Premier cricket coaching academy in Coimbatore with experienced coaches, modern facilities, and a structured stage-wise curriculum from grassroots to advanced levels.',
+    staff: [
+      { name: 'Venkat', role: 'Head Coach', experience: '15 years', specialization: 'Batting & Strategy', avatar: 'V', achievements: 'Former Ranji player, BCCI Level 3 certified' },
+      { name: 'Coach Ravi', role: 'Bowling Coach', experience: '10 years', specialization: 'Fast Bowling', avatar: 'R', achievements: 'TNCA district coach, 200+ wickets in league cricket' },
+      { name: 'Coach Priya', role: 'Fitness & Fielding', experience: '8 years', specialization: 'Fitness & Agility', avatar: 'P', achievements: 'Sports science degree, national-level athlete' }
+    ],
+    facilities: [
+      { name: '4 Net Lanes', icon: 'fa-baseball-bat-ball' },
+      { name: 'Bowling Machine', icon: 'fa-gear' },
+      { name: 'Video Analysis Room', icon: 'fa-video' },
+      { name: 'Full Ground', icon: 'fa-circle-dot' },
+      { name: 'Gym & Fitness Area', icon: 'fa-dumbbell' },
+      { name: 'Dressing Room', icon: 'fa-shirt' }
+    ],
+    achievements: [
+      { title: '12 Students Selected for TNCA District', year: '2025-26', icon: 'fa-trophy' },
+      { title: 'Best Academy Award — Coimbatore District', year: '2025', icon: 'fa-award' },
+      { title: '3 Students in Tamil Nadu U-16 Squad', year: '2024-25', icon: 'fa-star' },
+      { title: 'Inter-Academy Tournament Champions', year: '2024', icon: 'fa-medal' },
+      { title: '90% Student Progression Rate (Stage Promotions)', year: '2025', icon: 'fa-chart-line' }
+    ],
+    testimonials: [
+      { name: 'Mr. Rajesh', relation: 'Parent of Arun (U-14)', text: 'My son has improved tremendously in 8 months. The structured curriculum and regular feedback give us confidence.', rating: 5 },
+      { name: 'Karthik M', relation: 'Student, Stage 3', text: 'The coaches here focus on technique, not just hitting. I got selected for district trials thanks to SAM Academy.', rating: 5 },
+      { name: 'Mrs. Lakshmi', relation: 'Parent of Deepak (U-12)', text: 'The app updates keep me informed about my son\'s progress. Best investment for his cricket career.', rating: 4 }
+    ],
+    programs: [
+      { name: 'Regular Coaching', desc: 'Daily batch training — batting, bowling, fielding, fitness', fee: '₹3,500/month' },
+      { name: 'Weekend Program', desc: 'Saturday & Sunday sessions for school-going students', fee: '₹2,000/month' },
+      { name: 'Summer Camp', desc: 'Intensive 30-day camp — April & May', fee: '₹8,000 (one-time)' },
+      { name: 'Personal Coaching', desc: '1-on-1 sessions with head coach', fee: '₹1,500/session' }
+    ]
+  },
+  {
+    id: 2, name: 'MRF Pace Foundation', rating: 4.8, distance: '5.4 km', students: 120,
+    location: 'Singanallur, Coimbatore', batches: ['U-14', 'U-16', 'U-19'], fee: '5,000/month',
+    established: '2015', tagline: 'Pace is our game',
+    description: 'Specialized fast bowling academy with world-class infrastructure and international coaching methodology.',
+    staff: [{ name: 'Coach Ashwin', role: 'Head Coach', experience: '20 years', specialization: 'Pace Bowling', avatar: 'A', achievements: 'Former first-class cricketer' }],
+    facilities: [{ name: '6 Net Lanes', icon: 'fa-baseball-bat-ball' }, { name: '2 Bowling Machines', icon: 'fa-gear' }],
+    achievements: [{ title: '5 Students in State Squad', year: '2025', icon: 'fa-trophy' }],
+    testimonials: [], programs: []
+  },
+  {
+    id: 3, name: 'VB Cricket Academy', rating: 4.3, distance: '3.8 km', students: 95,
+    location: 'Peelamedu, Coimbatore', batches: ['U-10', 'U-12', 'U-14'], fee: '2,800/month',
+    established: '2020', tagline: 'Where young talent grows',
+    description: 'Beginner-friendly academy focusing on U-10 and U-12 age groups with fun-based learning approach.',
+    staff: [{ name: 'Coach Bala', role: 'Head Coach', experience: '12 years', specialization: 'Junior Development', avatar: 'B', achievements: 'BCCI Level 2 certified' }],
+    facilities: [{ name: '3 Net Lanes', icon: 'fa-baseball-bat-ball' }, { name: 'Open Ground', icon: 'fa-circle-dot' }],
+    achievements: [{ title: 'Best Junior Academy — Coimbatore', year: '2025', icon: 'fa-award' }],
+    testimonials: [], programs: []
+  }
 ];
 
 // --- Matches (from Academy) ---
@@ -1552,8 +1606,10 @@ screens['academy-search'] = () => `
 `;
 
 // ---- ACADEMY PROFILE ----
+let academyProfileTab = 'overview';
 screens['academy-profile'] = () => {
   const a = academies[0]; // SAM Cricket Academy
+  const tabs = ['overview', 'achievements', 'staff', 'programs', 'reviews'];
   return `
     <div class="screen-enter">
       <div class="screen-header" style="display:flex;align-items:center;gap:10px;margin-bottom:0;padding:16px 16px 0;">
@@ -1561,87 +1617,177 @@ screens['academy-profile'] = () => {
         <h3>Academy Profile</h3>
       </div>
 
-      <!-- Cover Image Placeholder -->
-      <div style="width:100%;height:160px;background:var(--gradient-hero);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:40px;margin-top:12px;">
-        <i class="fas fa-image"></i>
+      <!-- Cover Image with gradient -->
+      <div style="width:100%;height:180px;background:var(--gradient-hero);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;margin-top:12px;position:relative;">
+        <i class="fas fa-baseball-bat-ball" style="font-size:36px;opacity:0.3;margin-bottom:8px;"></i>
+        <div style="font-size:10px;opacity:0.5;letter-spacing:1px;text-transform:uppercase;">Est. ${a.established}</div>
       </div>
 
       <div class="screen-pad">
-        <!-- Academy Info -->
-        <div style="margin-top:-30px;position:relative;z-index:1;" class="fade-in-up fade-in-up-1">
+        <!-- Academy Info Card -->
+        <div style="margin-top:-40px;position:relative;z-index:1;" class="fade-in-up fade-in-up-1">
           <div class="card">
-            <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
               <div style="width:56px;height:56px;border-radius:var(--radius-lg);background:var(--accent-bg);display:flex;align-items:center;justify-content:center;border:3px solid var(--bg-card);">
                 <i class="fas fa-building-columns" style="color:var(--accent);font-size:22px;"></i>
               </div>
               <div style="flex:1;">
                 <div style="font-weight:700;font-size:var(--font-size-lg);color:var(--text-primary);">${a.name}</div>
-                <div style="font-size:var(--font-size-xs);color:var(--text-secondary);margin-top:2px;">
+                <div style="font-size:11px;color:var(--accent);font-weight:600;margin-top:2px;">${a.tagline}</div>
+                <div style="font-size:var(--font-size-xs);color:var(--text-secondary);margin-top:3px;">
                   <i class="fas fa-star" style="color:#f59e0b;"></i> ${a.rating} &middot;
                   <i class="fas fa-map-marker-alt"></i> ${a.location}
                 </div>
               </div>
             </div>
-            <p style="font-size:var(--font-size-sm);color:var(--text-secondary);line-height:1.5;">
-              Premier cricket coaching academy in Chennai with experienced coaches, world-class facilities, and a proven curriculum from grassroots to advanced levels. Affiliated with TNCA.
-            </p>
           </div>
         </div>
 
-        <!-- Stats -->
+        <!-- Stats Row -->
         <div class="stat-row fade-in-up fade-in-up-2" style="margin-top:12px;">
-          <div class="stat-box">
-            <div class="stat-val">${a.students}</div>
-            <div class="stat-lbl">Students</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val">12</div>
-            <div class="stat-lbl">Coaches</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val">4.6</div>
-            <div class="stat-lbl">Rating</div>
-          </div>
+          <div class="stat-box"><div class="stat-val">${a.students}</div><div class="stat-lbl">Students</div></div>
+          <div class="stat-box"><div class="stat-val">${a.staff.length}</div><div class="stat-lbl">Coaches</div></div>
+          <div class="stat-box"><div class="stat-val">${a.achievements.length}</div><div class="stat-lbl">Awards</div></div>
+          <div class="stat-box"><div class="stat-val">${a.rating}</div><div class="stat-lbl">Rating</div></div>
         </div>
 
-        <!-- Batches -->
-        <div class="section-header fade-in-up fade-in-up-3">
-          <span class="section-title">Batches Available</span>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;" class="fade-in-up fade-in-up-3">
-          ${a.batches.map(b => `<span style="font-size:var(--font-size-xs);font-weight:600;padding:6px 14px;border-radius:var(--radius-full);background:var(--accent-bg);color:var(--accent);">${b}</span>`).join('')}
+        <!-- Tab Navigation -->
+        <div style="display:flex;gap:0;margin:16px 0 12px;border-bottom:2px solid var(--border);overflow-x:auto;" class="fade-in-up fade-in-up-2">
+          ${tabs.map(t => `
+            <div onclick="academyProfileTab='${t}';renderScreen();" style="padding:10px 14px;font-size:12px;font-weight:${academyProfileTab === t ? '700' : '500'};color:${academyProfileTab === t ? 'var(--accent)' : 'var(--text-tertiary)'};border-bottom:2px solid ${academyProfileTab === t ? 'var(--accent)' : 'transparent'};margin-bottom:-2px;cursor:pointer;white-space:nowrap;text-transform:capitalize;">${t}</div>
+          `).join('')}
         </div>
 
-        <!-- Fee Info -->
-        <div class="card fade-in-up fade-in-up-3" style="display:flex;align-items:center;gap:12px;">
-          <i class="fas fa-indian-rupee-sign" style="color:var(--accent);font-size:18px;"></i>
-          <div style="flex:1;">
-            <div style="font-weight:600;font-size:var(--font-size-sm);color:var(--text-primary);">Fee: Rs.${a.fee}</div>
-            <div style="font-size:var(--font-size-xs);color:var(--text-secondary);">Includes coaching, equipment, assessments</div>
+        ${academyProfileTab === 'overview' ? `
+          <!-- About -->
+          <div class="card fade-in-up fade-in-up-3" style="margin-bottom:12px;">
+            <div style="font-weight:700;font-size:var(--font-size-sm);color:var(--text-primary);margin-bottom:8px;"><i class="fas fa-info-circle" style="color:var(--accent);margin-right:6px;"></i>About</div>
+            <p style="font-size:var(--font-size-sm);color:var(--text-secondary);line-height:1.6;margin:0;">${a.description}</p>
           </div>
-        </div>
 
-        <!-- Apply Button -->
-        <button class="btn btn-primary btn-full btn-lg fade-in-up fade-in-up-4" style="margin-top:16px;" onclick="navigateTo('apply')">
+          <!-- Facilities -->
+          <div class="card fade-in-up fade-in-up-3" style="margin-bottom:12px;">
+            <div style="font-weight:700;font-size:var(--font-size-sm);color:var(--text-primary);margin-bottom:12px;"><i class="fas fa-building" style="color:var(--accent);margin-right:6px;"></i>Facilities</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              ${a.facilities.map(f => `
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-tertiary);border-radius:8px;">
+                  <i class="fas ${f.icon}" style="color:var(--accent);font-size:12px;width:16px;text-align:center;"></i>
+                  <span style="font-size:11px;font-weight:500;color:var(--text-primary);">${f.name}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Batches -->
+          <div class="card fade-in-up fade-in-up-3" style="margin-bottom:12px;">
+            <div style="font-weight:700;font-size:var(--font-size-sm);color:var(--text-primary);margin-bottom:10px;"><i class="fas fa-users-line" style="color:var(--accent);margin-right:6px;"></i>Batches Available</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              ${a.batches.map(b => `<span style="font-size:11px;font-weight:600;padding:6px 14px;border-radius:var(--radius-full);background:var(--accent-bg);color:var(--accent);">${b}</span>`).join('')}
+            </div>
+          </div>
+
+          <!-- Recent Feed -->
+          <div class="section-header fade-in-up fade-in-up-4"><span class="section-title">Recent Posts</span></div>
+          ${feedPosts.slice(0, 2).map(post => `
+            <div class="feed-post fade-in-up fade-in-up-4">
+              <div class="feed-post-header">
+                <div class="feed-post-avatar">${post.avatar}</div>
+                <div style="flex:1;"><div class="feed-post-name">${post.author}</div><div class="feed-post-time">${post.time}</div></div>
+              </div>
+              <div class="feed-post-body">${post.text}</div>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${academyProfileTab === 'achievements' ? `
+          <div class="fade-in-up fade-in-up-3">
+            <!-- Highlight Banner -->
+            <div class="card" style="background:var(--gradient-hero);color:#fff;margin-bottom:16px;text-align:center;padding:20px;">
+              <i class="fas fa-trophy" style="font-size:28px;opacity:0.9;margin-bottom:8px;"></i>
+              <div style="font-weight:700;font-size:var(--font-size-lg);">${a.achievements.length} Achievements</div>
+              <div style="font-size:11px;opacity:0.8;margin-top:4px;">Recognized excellence in cricket coaching</div>
+            </div>
+
+            ${a.achievements.map((ach, i) => `
+              <div class="card fade-in-up fade-in-up-${Math.min(i + 1, 5)}" style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+                <div style="width:44px;height:44px;border-radius:var(--radius-md);background:var(--accent-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i class="fas ${ach.icon}" style="color:var(--accent);font-size:18px;"></i>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-weight:600;font-size:var(--font-size-sm);color:var(--text-primary);line-height:1.4;">${ach.title}</div>
+                  <div style="font-size:10px;color:var(--text-tertiary);margin-top:3px;"><i class="fas fa-calendar" style="margin-right:4px;"></i>${ach.year}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${academyProfileTab === 'staff' ? `
+          <div class="fade-in-up fade-in-up-3">
+            ${a.staff.map((s, i) => `
+              <div class="card fade-in-up fade-in-up-${Math.min(i + 1, 5)}" style="margin-bottom:10px;">
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+                  <div class="student-avatar" style="width:50px;height:50px;font-size:18px;">${s.avatar}</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:700;font-size:var(--font-size-base);color:var(--text-primary);">${s.name}</div>
+                    <div style="font-size:12px;color:var(--accent);font-weight:600;">${s.role}</div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">${s.experience} experience</div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;padding:10px;background:var(--bg-tertiary);border-radius:8px;">
+                  <div style="font-size:11px;color:var(--text-secondary);"><i class="fas fa-baseball-bat-ball" style="width:16px;color:var(--accent);"></i> Specialization: <strong>${s.specialization}</strong></div>
+                  <div style="font-size:11px;color:var(--text-secondary);"><i class="fas fa-award" style="width:16px;color:var(--accent);"></i> ${s.achievements}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${academyProfileTab === 'programs' ? `
+          <div class="fade-in-up fade-in-up-3">
+            ${(a.programs && a.programs.length > 0) ? a.programs.map((p, i) => `
+              <div class="card fade-in-up fade-in-up-${Math.min(i + 1, 5)}" style="margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+                  <div style="font-weight:700;font-size:var(--font-size-sm);color:var(--text-primary);">${p.name}</div>
+                  <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--radius-full);background:var(--success-bg);color:var(--success);white-space:nowrap;">${p.fee}</span>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">${p.desc}</div>
+              </div>
+            `).join('') : '<div class="card" style="text-align:center;padding:32px;color:var(--text-tertiary);"><i class="fas fa-clipboard-list" style="font-size:28px;margin-bottom:8px;"></i><div>Program details coming soon</div></div>'}
+          </div>
+        ` : ''}
+
+        ${academyProfileTab === 'reviews' ? `
+          <div class="fade-in-up fade-in-up-3">
+            <!-- Rating Summary -->
+            <div class="card" style="text-align:center;margin-bottom:16px;">
+              <div style="font-family:var(--font-display);font-size:40px;font-weight:800;color:var(--accent);">${a.rating}</div>
+              <div style="margin:6px 0 4px;">
+                ${[1,2,3,4,5].map(s => `<i class="fas fa-star" style="color:${s <= Math.round(a.rating) ? '#f59e0b' : 'var(--border)'};font-size:16px;"></i>`).join('')}
+              </div>
+              <div style="font-size:11px;color:var(--text-tertiary);">Based on ${a.testimonials.length} reviews</div>
+            </div>
+
+            ${(a.testimonials && a.testimonials.length > 0) ? a.testimonials.map((t, i) => `
+              <div class="card fade-in-up fade-in-up-${Math.min(i + 1, 5)}" style="margin-bottom:10px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <div class="student-avatar" style="width:36px;height:36px;font-size:13px;">${t.name.split(' ').map(n=>n[0]).join('')}</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;font-size:var(--font-size-sm);color:var(--text-primary);">${t.name}</div>
+                    <div style="font-size:10px;color:var(--text-tertiary);">${t.relation}</div>
+                  </div>
+                  <div>${[1,2,3,4,5].map(s => `<i class="fas fa-star" style="color:${s <= t.rating ? '#f59e0b' : 'var(--border)'};font-size:10px;"></i>`).join('')}</div>
+                </div>
+                <p style="font-size:12px;color:var(--text-secondary);line-height:1.5;margin:0;font-style:italic;">"${t.text}"</p>
+              </div>
+            `).join('') : '<div class="card" style="text-align:center;padding:32px;color:var(--text-tertiary);"><i class="fas fa-comment-dots" style="font-size:28px;margin-bottom:8px;"></i><div>No reviews yet</div></div>'}
+          </div>
+        ` : ''}
+
+        <!-- Apply Button (always visible) -->
+        <button class="btn btn-primary btn-full btn-lg fade-in-up fade-in-up-4" style="margin-top:16px;margin-bottom:16px;" onclick="navigateTo('apply')">
           <i class="fas fa-paper-plane"></i> Apply for Admission
         </button>
-
-        <!-- Recent Posts -->
-        <div class="section-header fade-in-up fade-in-up-5" style="margin-top:20px;">
-          <span class="section-title">Recent Posts</span>
-        </div>
-        ${feedPosts.slice(0, 2).map(post => `
-          <div class="feed-post fade-in-up fade-in-up-5">
-            <div class="feed-post-header">
-              <div class="feed-post-avatar">${post.avatar}</div>
-              <div style="flex:1;">
-                <div class="feed-post-name">${post.author}</div>
-                <div class="feed-post-time">${post.time}</div>
-              </div>
-            </div>
-            <div class="feed-post-body">${post.text}</div>
-          </div>
-        `).join('')}
       </div>
     </div>
   `;
@@ -1721,38 +1867,151 @@ screens['apply'] = () => `
 `;
 
 // ---- APPLY STATUS ----
-screens['apply-status'] = () => `
-  <div class="screen-pad screen-enter" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;">
-    <div class="fade-in-up fade-in-up-1">
-      <div style="width:80px;height:80px;border-radius:var(--radius-full);background:var(--success-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-        <i class="fas fa-check-circle" style="font-size:40px;color:var(--success);"></i>
+let applyStatusView = 'submitted'; // submitted | meeting-scheduled | accepted | rejected
+screens['apply-status'] = () => {
+  return `
+    <div class="screen-pad screen-enter">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+        <button class="btn btn-ghost btn-icon" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+        <h3 style="font-weight:700;">Application Status</h3>
       </div>
-      <h2 style="font-size:var(--font-size-xl);font-weight:700;color:var(--text-primary);margin-bottom:8px;">Application Submitted!</h2>
-      <p style="font-size:var(--font-size-sm);color:var(--text-secondary);max-width:280px;margin:0 auto;line-height:1.5;">
-        Your admission application to SAM Cricket Academy has been submitted successfully.
-      </p>
-    </div>
 
-    <div class="card fade-in-up fade-in-up-2" style="margin-top:24px;width:100%;max-width:300px;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <i class="fas fa-clock" style="color:var(--warning);"></i>
-        <span style="font-weight:600;font-size:var(--font-size-sm);color:var(--text-primary);">Status: Under Review</span>
+      <!-- Status Timeline -->
+      <div class="card fade-in-up fade-in-up-1" style="margin-bottom:16px;">
+        <div style="display:flex;flex-direction:column;gap:0;">
+          ${[
+            { step: 'Application Submitted', icon: 'fa-paper-plane', done: true, date: '18 Mar 2026' },
+            { step: 'Under Review', icon: 'fa-search', done: true, date: '19 Mar 2026' },
+            { step: 'Meeting Scheduled', icon: 'fa-calendar-check', done: applyStatusView !== 'submitted', date: applyStatusView !== 'submitted' ? '22 Mar 2026, 10:00 AM' : 'Pending' },
+            { step: 'Decision', icon: 'fa-check-double', done: applyStatusView === 'accepted' || applyStatusView === 'rejected', date: applyStatusView === 'accepted' ? 'Accepted!' : applyStatusView === 'rejected' ? 'Not selected' : 'Pending' }
+          ].map((s, i, arr) => `
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <div style="display:flex;flex-direction:column;align-items:center;">
+                <div style="width:32px;height:32px;border-radius:var(--radius-full);background:${s.done ? 'var(--accent)' : 'var(--bg-tertiary)'};display:flex;align-items:center;justify-content:center;">
+                  <i class="fas ${s.done ? 'fa-check' : s.icon}" style="font-size:12px;color:${s.done ? '#fff' : 'var(--text-tertiary)'};"></i>
+                </div>
+                ${i < arr.length - 1 ? `<div style="width:2px;height:32px;background:${s.done ? 'var(--accent)' : 'var(--border)'};"></div>` : ''}
+              </div>
+              <div style="padding-bottom:${i < arr.length - 1 ? '16px' : '0'};">
+                <div style="font-weight:${s.done ? '700' : '500'};font-size:var(--font-size-sm);color:${s.done ? 'var(--text-primary)' : 'var(--text-tertiary)'};">${s.step}</div>
+                <div style="font-size:10px;color:${s.done ? 'var(--text-secondary)' : 'var(--text-tertiary)'};margin-top:2px;">${s.date}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
       </div>
-      <div style="font-size:var(--font-size-xs);color:var(--text-secondary);line-height:1.5;">
-        The academy will review your application and contact you within <strong>3-5 business days</strong>. You'll receive a notification once approved.
-      </div>
-    </div>
 
-    <div class="fade-in-up fade-in-up-3" style="margin-top:24px;width:100%;max-width:300px;">
-      <button class="btn btn-primary btn-full btn-lg" onclick="navigateTo('home')">
-        <i class="fas fa-home"></i> Go to Home
-      </button>
-      <button class="btn btn-ghost btn-full" style="margin-top:8px;border:1px solid var(--border);" onclick="navigateTo('academy-search')">
-        <i class="fas fa-search"></i> Browse More Academies
-      </button>
+      <!-- Demo Toggle (for prototype demo purposes) -->
+      <div class="card fade-in-up fade-in-up-2" style="margin-bottom:16px;background:var(--bg-tertiary);border:1px dashed var(--border);">
+        <div style="font-size:10px;color:var(--text-tertiary);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Demo: Change Status</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          ${['submitted', 'meeting-scheduled', 'accepted', 'rejected'].map(v => `
+            <button style="padding:6px 12px;font-size:11px;border-radius:var(--radius-full);border:1px solid ${applyStatusView === v ? 'var(--accent)' : 'var(--border)'};background:${applyStatusView === v ? 'var(--accent)' : 'var(--bg-card)'};color:${applyStatusView === v ? '#fff' : 'var(--text-secondary)'};cursor:pointer;font-weight:600;" onclick="applyStatusView='${v}';renderScreen();">${v.replace('-', ' ')}</button>
+          `).join('')}
+        </div>
+      </div>
+
+      ${applyStatusView === 'submitted' ? `
+        <!-- Waiting State -->
+        <div class="card fade-in-up fade-in-up-3" style="text-align:center;padding:24px;">
+          <i class="fas fa-hourglass-half" style="font-size:32px;color:var(--warning);margin-bottom:12px;"></i>
+          <div style="font-weight:700;font-size:var(--font-size-base);color:var(--text-primary);margin-bottom:6px;">Application Under Review</div>
+          <div style="font-size:var(--font-size-xs);color:var(--text-secondary);line-height:1.5;">SAM Cricket Academy is reviewing your application. You'll receive a notification when they respond.</div>
+        </div>
+      ` : ''}
+
+      ${applyStatusView === 'meeting-scheduled' ? `
+        <!-- Meeting Details -->
+        <div class="card fade-in-up fade-in-up-3" style="border:1px solid var(--accent);margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-bg);display:flex;align-items:center;justify-content:center;">
+              <i class="fas fa-calendar-check" style="color:var(--accent);font-size:16px;"></i>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:var(--font-size-base);color:var(--text-primary);">Meeting Scheduled</div>
+              <div style="font-size:11px;color:var(--accent);font-weight:600;">with Head Coach Venkat</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--bg-tertiary);border-radius:8px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:var(--font-size-sm);color:var(--text-secondary);">
+              <i class="fas fa-calendar" style="width:18px;color:var(--accent);text-align:center;"></i> <strong>22 Mar 2026</strong> (Saturday)
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:var(--font-size-sm);color:var(--text-secondary);">
+              <i class="fas fa-clock" style="width:18px;color:var(--accent);text-align:center;"></i> <strong>10:00 AM — 10:30 AM</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:var(--font-size-sm);color:var(--text-secondary);">
+              <i class="fas fa-location-dot" style="width:18px;color:var(--accent);text-align:center;"></i> SAM Cricket Academy, RS Puram
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:var(--font-size-sm);color:var(--text-secondary);">
+              <i class="fas fa-user" style="width:18px;color:var(--accent);text-align:center;"></i> Bring the student along
+            </div>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--text-secondary);line-height:1.5;padding:10px;background:var(--warning-bg);border-radius:8px;">
+            <i class="fas fa-info-circle" style="color:var(--warning);margin-right:4px;"></i>
+            <strong>Note from academy:</strong> Please bring the student. We'll conduct a brief skill assessment and discuss the coaching program. Feel free to ask any questions about the curriculum and facilities.
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;" class="fade-in-up fade-in-up-4">
+          <button class="btn" style="flex:1;padding:12px;font-size:var(--font-size-sm);font-weight:600;border-radius:var(--radius-lg);background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);cursor:pointer;" onclick="showToast('Reschedule request sent!', 'info')">
+            <i class="fas fa-clock-rotate-left"></i> Reschedule
+          </button>
+          <button class="btn btn-primary" style="flex:2;padding:12px;font-size:var(--font-size-sm);font-weight:700;border-radius:var(--radius-lg);" onclick="showToast('Meeting confirmed!', 'success')">
+            <i class="fas fa-check"></i> Confirm Attendance
+          </button>
+        </div>
+      ` : ''}
+
+      ${applyStatusView === 'accepted' ? `
+        <!-- Accepted State -->
+        <div class="card fade-in-up fade-in-up-3" style="text-align:center;padding:24px;border:1px solid var(--success);">
+          <div style="width:64px;height:64px;border-radius:var(--radius-full);background:var(--success-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+            <i class="fas fa-check-circle" style="font-size:32px;color:var(--success);"></i>
+          </div>
+          <div style="font-weight:700;font-size:var(--font-size-lg);color:var(--text-primary);margin-bottom:4px;">Congratulations!</div>
+          <div style="font-size:var(--font-size-sm);color:var(--text-secondary);line-height:1.5;">You've been accepted into <strong>SAM Cricket Academy</strong></div>
+        </div>
+
+        <div class="card fade-in-up fade-in-up-4" style="margin-top:12px;">
+          <div style="font-weight:600;font-size:var(--font-size-sm);color:var(--text-primary);margin-bottom:10px;">Your Details</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:var(--font-size-sm);color:var(--text-secondary);">
+            <div style="display:flex;justify-content:space-between;"><span>Batch</span><strong style="color:var(--text-primary);">U-14 Morning</strong></div>
+            <div style="display:flex;justify-content:space-between;"><span>Stage</span><strong style="color:var(--text-primary);">Stage 1 — Foundation</strong></div>
+            <div style="display:flex;justify-content:space-between;"><span>Role</span><strong style="color:var(--text-primary);">Batsman</strong></div>
+            <div style="display:flex;justify-content:space-between;"><span>Start Date</span><strong style="color:var(--text-primary);">1 Apr 2026</strong></div>
+            <div style="display:flex;justify-content:space-between;"><span>Monthly Fee</span><strong style="color:var(--accent);">₹3,500</strong></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg fade-in-up fade-in-up-5" style="margin-top:16px;" onclick="showToast('Welcome to SAM Cricket Academy!', 'success');setTimeout(()=>navigateTo('home'),500);">
+          <i class="fas fa-cricket-bat-ball"></i> Start Your Cricket Journey
+        </button>
+      ` : ''}
+
+      ${applyStatusView === 'rejected' ? `
+        <!-- Rejected State -->
+        <div class="card fade-in-up fade-in-up-3" style="text-align:center;padding:24px;">
+          <div style="width:64px;height:64px;border-radius:var(--radius-full);background:var(--danger-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+            <i class="fas fa-times-circle" style="font-size:32px;color:var(--danger);"></i>
+          </div>
+          <div style="font-weight:700;font-size:var(--font-size-base);color:var(--text-primary);margin-bottom:6px;">Application Not Selected</div>
+          <div style="font-size:var(--font-size-xs);color:var(--text-secondary);line-height:1.5;">Unfortunately, SAM Cricket Academy could not accommodate your application at this time. Don't give up — try other academies!</div>
+        </div>
+
+        <div class="card fade-in-up fade-in-up-4" style="margin-top:12px;background:var(--bg-tertiary);">
+          <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">
+            <i class="fas fa-comment" style="color:var(--accent);margin-right:4px;"></i>
+            <strong>Academy feedback:</strong> "We recommend continuing practice and reapplying next quarter. The student shows potential but needs more practice on basic techniques."
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg fade-in-up fade-in-up-5" style="margin-top:16px;" onclick="navigateTo('academy-search')">
+          <i class="fas fa-search"></i> Browse Other Academies
+        </button>
+      ` : ''}
     </div>
-  </div>
-`;
+  `;
+};
 
 // ========== MATCHES (Student/Parent View) ==========
 

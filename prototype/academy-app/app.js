@@ -51,9 +51,9 @@ const students = [
 
 // --- Admission Requests ---
 const admissionRequests = [
-  { id: 1, name: 'Dhruv Patel', age: 11, experience: '2 years club cricket', preferredBatch: 'Morning U-12', parent: 'Mr. Rajesh Patel', parentPhone: '+91 98765 12340', appliedDate: '12 Mar 2026' },
-  { id: 2, name: 'Sneha R', age: 13, experience: 'School team captain', preferredBatch: 'Evening U-14', parent: 'Mrs. Lakshmi R', parentPhone: '+91 98765 56780', appliedDate: '14 Mar 2026' },
-  { id: 3, name: 'Arjun V', age: 9, experience: 'Beginner — no prior coaching', preferredBatch: 'Morning U-12', parent: 'Mr. Venkatesh V', parentPhone: '+91 98765 99010', appliedDate: '15 Mar 2026' }
+  { id: 1, name: 'Dhruv Patel', age: 11, experience: '2 years club cricket', preferredBatch: 'Morning U-12', parent: 'Mr. Rajesh Patel', parentPhone: '+91 98765 12340', appliedDate: '12 Mar 2026', status: 'pending', medicalNotes: 'None', previousAcademy: 'Self-taught' },
+  { id: 2, name: 'Sneha R', age: 13, experience: 'School team captain', preferredBatch: 'Evening U-14', parent: 'Mrs. Lakshmi R', parentPhone: '+91 98765 56780', appliedDate: '14 Mar 2026', status: 'meeting-scheduled', meetingDate: '22 Mar 2026', meetingTime: '10:00 AM', medicalNotes: 'Mild asthma', previousAcademy: 'VB Cricket Academy' },
+  { id: 3, name: 'Arjun V', age: 9, experience: 'Beginner — no prior coaching', preferredBatch: 'Morning U-12', parent: 'Mr. Venkatesh V', parentPhone: '+91 98765 99010', appliedDate: '15 Mar 2026', status: 'pending', medicalNotes: 'None', previousAcademy: 'None' }
 ];
 
 // --- Feed Posts ---
@@ -1672,7 +1672,13 @@ screens['staff-chat'] = () => `
 // ============================================
 // 19. ADMISSIONS
 // ============================================
-screens['admissions'] = () => `
+let admissionFilter = 'all';
+screens['admissions'] = () => {
+  const filtered = admissionFilter === 'all' ? admissionRequests : admissionRequests.filter(a => a.status === admissionFilter);
+  const pendingCount = admissionRequests.filter(a => a.status === 'pending').length;
+  const meetingCount = admissionRequests.filter(a => a.status === 'meeting-scheduled').length;
+
+  return `
   <div class="screen-pad screen-enter">
     <!-- Header -->
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
@@ -1681,36 +1687,85 @@ screens['admissions'] = () => `
       <span style="font-size:12px;padding:2px 8px;background:var(--accent-bg);color:var(--accent);border-radius:10px;font-weight:600;">${admissionRequests.length}</span>
     </div>
 
-    ${admissionRequests.map((a, i) => `
-      <div class="admission-card fade-in-up fade-in-up-${Math.min(i + 1, 5)}">
-        <div class="admission-header">
+    <!-- Filter Tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;" class="fade-in-up fade-in-up-1">
+      ${[
+        { key: 'all', label: 'All', count: admissionRequests.length },
+        { key: 'pending', label: 'New', count: pendingCount },
+        { key: 'meeting-scheduled', label: 'Meeting Set', count: meetingCount }
+      ].map(f => `
+        <div onclick="admissionFilter='${f.key}';renderScreen();" style="padding:8px 14px;font-size:12px;font-weight:${admissionFilter === f.key ? '700' : '500'};color:${admissionFilter === f.key ? '#fff' : 'var(--text-secondary)'};background:${admissionFilter === f.key ? 'var(--accent)' : 'var(--bg-card)'};border:1px solid ${admissionFilter === f.key ? 'var(--accent)' : 'var(--border)'};border-radius:var(--radius-full);cursor:pointer;white-space:nowrap;">${f.label} (${f.count})</div>
+      `).join('')}
+    </div>
+
+    ${filtered.map((a, i) => `
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;" class="fade-in-up fade-in-up-${Math.min(i + 1, 5)}">
+        <!-- Student Header -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
           <div class="student-avatar" style="width:44px;height:44px;font-size:16px;">${a.name.split(' ').map(n=>n[0]).join('')}</div>
           <div style="flex:1;">
             <div style="font-weight:700;font-size:var(--font-size-base);color:var(--text-primary);">${a.name}</div>
             <div style="font-size:var(--font-size-xs);color:var(--text-secondary);">Age ${a.age} · ${a.experience}</div>
           </div>
-          <span style="font-size:10px;padding:3px 8px;background:var(--warning-bg);color:var(--warning);border-radius:10px;font-weight:600;">Pending</span>
+          <span style="font-size:10px;padding:3px 8px;background:${a.status === 'pending' ? 'var(--warning-bg)' : 'var(--accent-bg)'};color:${a.status === 'pending' ? 'var(--warning)' : 'var(--accent)'};border-radius:10px;font-weight:600;">${a.status === 'pending' ? 'New' : 'Meeting Set'}</span>
         </div>
-        <div style="display:flex;flex-direction:column;gap:6px;padding:10px;background:var(--bg-tertiary);border-radius:8px;font-size:var(--font-size-xs);color:var(--text-secondary);">
-          <div><i class="fas fa-clock" style="width:16px;color:var(--text-tertiary);"></i> Preferred: ${a.preferredBatch}</div>
+
+        <!-- Details -->
+        <div style="display:flex;flex-direction:column;gap:5px;padding:10px;background:var(--bg-tertiary);border-radius:8px;font-size:var(--font-size-xs);color:var(--text-secondary);margin-bottom:10px;">
+          <div><i class="fas fa-users-line" style="width:16px;color:var(--text-tertiary);"></i> Preferred: ${a.preferredBatch}</div>
           <div><i class="fas fa-user" style="width:16px;color:var(--text-tertiary);"></i> Parent: ${a.parent}</div>
           <div><i class="fas fa-phone" style="width:16px;color:var(--text-tertiary);"></i> ${a.parentPhone}</div>
           <div><i class="fas fa-calendar" style="width:16px;color:var(--text-tertiary);"></i> Applied: ${a.appliedDate}</div>
+          ${a.previousAcademy !== 'None' ? `<div><i class="fas fa-building-columns" style="width:16px;color:var(--text-tertiary);"></i> Previous: ${a.previousAcademy}</div>` : ''}
+          ${a.medicalNotes !== 'None' ? `<div><i class="fas fa-notes-medical" style="width:16px;color:var(--danger);"></i> Medical: ${a.medicalNotes}</div>` : ''}
         </div>
-        <div class="admission-actions">
-          <button class="btn btn-outline" style="flex:1;font-size:13px;color:var(--danger);border-color:var(--danger);" onclick="showToast('${a.name} rejected', 'warning')">
-            <i class="fas fa-times"></i> Reject
-          </button>
-          <button class="btn btn-primary" style="flex:2;font-size:13px;" onclick="showModal('Accept ${a.name}', '<div style=&quot;margin-bottom:12px;&quot;><label style=&quot;font-size:13px;font-weight:600;display:block;margin-bottom:6px;&quot;>Assign Role</label><select style=&quot;width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;&quot;><option>Batsman</option><option>Bowler</option><option>Allrounder</option></select></div><div style=&quot;margin-bottom:12px;&quot;><label style=&quot;font-size:13px;font-weight:600;display:block;margin-bottom:6px;&quot;>Stage</label><select style=&quot;width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;&quot;><option>Stage 1</option><option>Stage 2</option></select></div><div><label style=&quot;font-size:13px;font-weight:600;display:block;margin-bottom:6px;&quot;>Batch</label><select style=&quot;width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;&quot;><option>Morning U-12</option><option>Evening U-14</option><option>Weekend All Ages</option></select></div>', [{label: 'Confirm Admission', class: 'btn-primary btn-full', onclick: 'closeModal();showToast(\\\'${a.name} admitted!\\\', \\\'success\\\')'}])">
-            <i class="fas fa-check"></i> Accept
-          </button>
-        </div>
+
+        ${a.status === 'meeting-scheduled' ? `
+          <!-- Meeting Info Banner -->
+          <div style="padding:10px;background:var(--accent-bg);border-radius:8px;margin-bottom:10px;display:flex;align-items:center;gap:10px;">
+            <i class="fas fa-calendar-check" style="color:var(--accent);font-size:16px;"></i>
+            <div style="flex:1;">
+              <div style="font-size:12px;font-weight:700;color:var(--accent);">Meeting: ${a.meetingDate} at ${a.meetingTime}</div>
+              <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">With Head Coach Venkat</div>
+            </div>
+          </div>
+          <!-- Post-Meeting Actions -->
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline" style="flex:1;font-size:12px;color:var(--danger);border-color:var(--danger);padding:10px;" onclick="showToast('${a.name} rejected after meeting', 'warning')">
+              <i class="fas fa-times"></i> Reject
+            </button>
+            <button class="btn btn-primary" style="flex:2;font-size:12px;padding:10px;" onclick="showAdmitModal('${a.name}')">
+              <i class="fas fa-check"></i> Admit Student
+            </button>
+          </div>
+        ` : `
+          <!-- Pending Actions: 3 buttons -->
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline" style="flex:1;font-size:11px;color:var(--danger);border-color:var(--danger);padding:10px;" onclick="showToast('${a.name} rejected', 'warning')">
+              <i class="fas fa-times"></i> Reject
+            </button>
+            <button class="btn" style="flex:1;font-size:11px;padding:10px;background:var(--bg-card);border:1px solid var(--accent);color:var(--accent);border-radius:var(--radius-md);cursor:pointer;font-weight:600;" onclick="showScheduleMeetingModal('${a.name}')">
+              <i class="fas fa-calendar"></i> Schedule
+            </button>
+            <button class="btn btn-primary" style="flex:1;font-size:11px;padding:10px;" onclick="showAdmitModal('${a.name}')">
+              <i class="fas fa-check"></i> Admit
+            </button>
+          </div>
+        `}
       </div>
     `).join('')}
 
+    ${filtered.length === 0 ? `
+      <div style="text-align:center;padding:40px 16px;color:var(--text-tertiary);">
+        <i class="fas fa-inbox" style="font-size:32px;margin-bottom:10px;"></i>
+        <div style="font-size:var(--font-size-sm);">No admission requests in this category</div>
+      </div>
+    ` : ''}
+
     <div style="height:24px;"></div>
   </div>
-`;
+  `;
+};
 
 // ============================================
 // 20. STAFF MANAGEMENT
@@ -2399,6 +2454,77 @@ function selectPayMethod(el) {
   });
   el.style.border = '1.5px solid var(--accent)';
   el.style.background = 'var(--accent-bg)';
+}
+
+function showScheduleMeetingModal(studentName) {
+  const modalHtml = `
+    <div style="margin-bottom:14px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Meeting Date</label>
+      <input type="date" id="meetingDate" value="2026-03-25" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-primary);">
+    </div>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Meeting Time</label>
+      <select id="meetingTime" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-primary);">
+        <option>9:00 AM</option><option>9:30 AM</option><option selected>10:00 AM</option><option>10:30 AM</option>
+        <option>11:00 AM</option><option>4:00 PM</option><option>4:30 PM</option><option>5:00 PM</option>
+      </select>
+    </div>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Meeting With</label>
+      <select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-primary);">
+        <option selected>Head Coach Venkat</option><option>Coach Ravi</option><option>Coach Priya</option>
+      </select>
+    </div>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Note to Parent (optional)</label>
+      <textarea style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:13px;resize:vertical;min-height:60px;color:var(--text-primary);" placeholder="e.g., Please bring the student for a skill assessment...">Please bring the student along. We will conduct a brief skill assessment and discuss the coaching program.</textarea>
+    </div>
+    <div style="padding:10px;background:var(--accent-bg);border-radius:8px;font-size:12px;color:var(--text-secondary);line-height:1.5;">
+      <i class="fas fa-info-circle" style="color:var(--accent);margin-right:4px;"></i>
+      The parent will receive a notification with meeting details and can confirm or request rescheduling.
+    </div>
+  `;
+  showModal('Schedule Meeting — ' + studentName, modalHtml, [
+    { label: 'Schedule & Notify Parent', class: 'btn-primary btn-full', onclick: "closeModal();showToast('Meeting scheduled! Parent notified.', 'success')" }
+  ]);
+}
+
+function showAdmitModal(studentName) {
+  const modalHtml = `
+    <div style="margin-bottom:12px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Assign Role</label>
+      <select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-primary);">
+        <option>Batsman</option><option>Bowler (Fast)</option><option>Bowler (Spin)</option><option>Allrounder</option><option>Wicketkeeper</option>
+      </select>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Starting Stage</label>
+      <select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-primary);">
+        <option selected>Stage 1 — Foundation</option><option>Stage 2 — Developing</option><option>Stage 3 — Intermediate</option>
+      </select>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Assign Batch</label>
+      <select style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-primary);">
+        <option>Morning U-12</option><option>Evening U-14</option><option>Weekend All Ages</option>
+      </select>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Start Date</label>
+      <input type="date" value="2026-04-01" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-primary);">
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Monthly Fee</label>
+      <input type="text" value="3,500" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:14px;color:var(--text-primary);">
+    </div>
+    <div style="padding:10px;background:var(--success-bg);border-radius:8px;font-size:12px;color:var(--text-secondary);line-height:1.5;">
+      <i class="fas fa-check-circle" style="color:var(--success);margin-right:4px;"></i>
+      The student and parent will be notified and can start their cricket journey from the assigned start date.
+    </div>
+  `;
+  showModal('Admit ' + studentName, modalHtml, [
+    { label: 'Confirm Admission', class: 'btn-primary btn-full', onclick: "closeModal();showToast('" + studentName + " admitted successfully!', 'success')" }
+  ]);
 }
 
 function updateScoreDisplay() {
